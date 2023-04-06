@@ -1,11 +1,9 @@
 import argparse
-import numpy as np
-
 import norfair
 
 from norfair import Tracker, Video
 
-from tracking.norfair import (yolo_detections_to_norfair_detections, center)
+from tracking.norfair_detections import yolo_detections_to_norfair_detections
 from detect_people.yolo import YOLO
 
 DISTANCE_THRESHOLD_BBOX: float = 0.7
@@ -15,19 +13,19 @@ MAX_DISTANCE: int = 10000
 parser = argparse.ArgumentParser(description="Track objects in a video.")
 parser.add_argument("files", type=str, nargs="+", help="Video files to process")
 parser.add_argument(
-    "--detector-path", type=str, default="/yolov7.pt", help="YOLOv7 model path"
+    "--model-name", type=str, default="yolov5n", help="YOLOv5 model name"
 )
 parser.add_argument(
-    "--img-size", type=int, default="720", help="YOLOv7 inference size (pixels)"
+    "--img-size", type=int, default="640", help="YOLOv5 inference size (pixels)"
 )
 parser.add_argument(
     "--conf-threshold",
     type=float,
-    default="0.25",
-    help="YOLOv7 object confidence threshold",
+    default="0.30",
+    help="YOLOv5 object confidence threshold",
 )
 parser.add_argument(
-    "--iou-threshold", type=float, default="0.45", help="YOLOv7 IOU threshold for NMS"
+    "--iou-threshold", type=float, default="0.45", help="YOLOv5 IOU threshold for NMS"
 )
 parser.add_argument(
     "--classes",
@@ -41,18 +39,17 @@ parser.add_argument(
 parser.add_argument(
     "--track-points",
     type=str,
-    default="bbox",
+    default="centroid",
     help="Track points: 'centroid' or 'bbox'",
 )
 args = parser.parse_args()
 
-model = YOLO(args.detector_path, device=args.device)
+model = YOLO(args.model_name, device=args.device)
 
 for input_path in args.files:
     video = Video(input_path=input_path)
 
     distance_function = "iou" if args.track_points == "bbox" else "euclidean"
-
     distance_threshold = (
         DISTANCE_THRESHOLD_BBOX
         if args.track_points == "bbox"
@@ -77,9 +74,9 @@ for input_path in args.files:
         )
         tracked_objects = tracker.update(detections=detections)
         if args.track_points == "centroid":
-            # norfair.draw_points(frame, detections)
+            #norfair.draw_points(frame, detections)
             norfair.draw_tracked_objects(frame, tracked_objects)
         elif args.track_points == "bbox":
-            norfair.draw_boxes(frame, detections)
-            # norfair.draw_tracked_boxes(frame, tracked_objects)
+            #norfair.draw_boxes(frame, detections)
+            norfair.draw_tracked_boxes(frame, tracked_objects)
         video.write(frame)
