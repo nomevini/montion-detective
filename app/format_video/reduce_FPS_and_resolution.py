@@ -15,8 +15,8 @@ def reduzir_resolucao_e_fps(video, fps_novo):
     fps = fps_novo
     resolucao = (largura_nova, altura_nova)
     proporcao_str = f'{largura_nova}x{altura_nova}'
-    nome_saida = f'{video.split(".")[0]}_{proporcao_str}_reduzido.mp4'
-    out = cv2.VideoWriter(nome_saida, codec, fps, resolucao)
+    path_out = f'{video.split(".")[0]}_{proporcao_str}_reduzido.mp4'
+    out = cv2.VideoWriter(path_out, codec, fps, resolucao)
 
     n_frames_pular = int(fps_antigo / fps_novo)
     count = 0
@@ -33,7 +33,4 @@ def reduzir_resolucao_e_fps(video, fps_novo):
     cap.release()
     out.release()
 
-    return nome_saida
-
-
-novo_video = reduzir_resolucao_e_fps('pedestrian_cut.mp4', 5)
+    return path_out
