@@ -6,9 +6,6 @@ path_model = "detect/yolov8n.pt"
 video_path = "/home/nomevini/Documentos/Iniciação Cientifica/Projeto/tracking_people_in_videos/app/assets/videos/pedestrian_cut.mp4"
 
 
-
-
-
 info_detections = detect_and_track(path_model, video_path)
 
 print_formatted_time(info_detections)
