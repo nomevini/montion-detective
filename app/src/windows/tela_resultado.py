@@ -11,7 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_MainWindow(object):
+class TelaResultado(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1119, 698)
@@ -448,14 +448,14 @@ class Ui_MainWindow(object):
         self.label_rsp_velocidade.setText(_translate("MainWindow", " 2.5 pixels/frame"))
         self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-import create
+import create_rc
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = TelaResultado()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())

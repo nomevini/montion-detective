@@ -3,10 +3,21 @@
     <file>checbox_enable.png</file>
     <file>checbox_disable.png</file>
   </qresource>
+  <qresource prefix="file_load">
+    <file>file.png</file>
+    <file>file-hover.png</file>
+  </qresource>
+  <qresource prefix="back">
+    <file>left-arrow.png</file>
+    <file>left-arrow-in-hover.png</file>
+  </qresource>
   <qresource prefix="play">
     <file>pause.png</file>
     <file>pause_hover.png</file>
     <file>play.png</file>
     <file>play_hover.png</file>
+  </qresource>
+  <qresource prefix="eye">
+    <file>eyeicon.png</file>
   </qresource>
 </RCC>

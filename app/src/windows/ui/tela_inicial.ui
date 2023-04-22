@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>TelaInicial</class>
+ <widget class="QMainWindow" name="TelaInicial">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1128</width>
+    <width>1180</width>
     <height>698</height>
    </rect>
   </property>
@@ -924,6 +924,19 @@
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
      <widget class="QFrame" name="frame">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -968,12 +981,29 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rgb(0, 0, 0);</string>
+          <string notr="true">background-color: rgb(0, 0, 0);
+border-radius: 30px</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>60</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <widget class="QFrame" name="frame_2">
@@ -1179,6 +1209,19 @@ QPushButton:hover{
        </item>
       </layout>
      </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>TelaCarregarVideo</class>
+ <widget class="QMainWindow" name="TelaCarregarVideo">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1147</width>
-    <height>698</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -479,8 +479,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>700</width>
-     <height>0</height>
+     <width>1000</width>
+     <height>800</height>
     </size>
    </property>
    <property name="styleSheet">
@@ -497,7 +497,7 @@
      <number>0</number>
     </property>
     <property name="topMargin">
-     <number>0</number>
+     <number>30</number>
     </property>
     <property name="rightMargin">
      <number>0</number>
@@ -506,6 +506,19 @@
      <number>0</number>
     </property>
     <item>
+     <spacer name="verticalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item alignment="Qt::AlignHCenter">
      <widget class="QFrame" name="frame_video">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -516,7 +529,7 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>450</height>
+        <height>800</height>
        </size>
       </property>
       <property name="palette">
@@ -1008,6 +1021,15 @@ border: none</string>
        </item>
        <item>
         <widget class="QFrame" name="frame_1">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>600</width>
+           <height>580</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">border: none</string>
          </property>
@@ -1018,8 +1040,11 @@ border: none</string>
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="topMargin">
+           <number>9</number>
+          </property>
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0,0">
+           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,0,0,0,0,0,0,0,0">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -1075,7 +1100,7 @@ padding-left: 0px;</string>
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0">
+             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0">
               <property name="spacing">
                <number>0</number>
               </property>
@@ -1094,7 +1119,7 @@ padding-left: 0px;</string>
               <property name="bottomMargin">
                <number>0</number>
               </property>
-              <item>
+              <item alignment="Qt::AlignLeft">
                <widget class="QLabel" name="label_nome_arquivo">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -1126,7 +1151,7 @@ padding-left: 10px;</string>
                 </property>
                </widget>
               </item>
-              <item>
+              <item alignment="Qt::AlignLeft">
                <widget class="QPushButton" name="pushButton_carregar_video">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1147,10 +1172,10 @@ padding-left: 10px;</string>
                  </size>
                 </property>
                 <property name="mouseTracking">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="toolTip">
-                 <string/>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Carregar video&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="toolTipDuration">
                  <number>-1</number>
@@ -1171,15 +1196,24 @@ padding-left: 10px;</string>
                  <enum>Qt::LeftToRight</enum>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">margin: none;
-padding: none;</string>
+                 <string notr="true">
+QPushButton {
+	image: url(:/file_load/file.png);
+	padding-left: 15px;
+	
+}
+
+QPushButton:hover {
+	image: url(:/file_load/file-hover.png)
+}
+
+
+QToolTip{
+	padding: 2px;
+}</string>
                 </property>
                 <property name="text">
                  <string/>
-                </property>
-                <property name="icon">
-                 <iconset>
-                  <normaloff>icons/file.png</normaloff>icons/file.png</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -1195,23 +1229,16 @@ padding: none;</string>
                 </property>
                </widget>
               </item>
-              <item>
-               <spacer name="horizontalSpacer_3">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
              </layout>
             </item>
             <item>
              <widget class="QCheckBox" name="checkBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -1229,6 +1256,9 @@ padding: none;</string>
                 <pointsize>14</pointsize>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Reduz a resolução do vídeo, o que pode melhorar significativamente a velocidade de processamento. Isso é útil para vídeos grandes ou para computadores com recursos limitados.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="styleSheet">
                <string notr="true">QCheckBox{
 	color: rgb(255, 255, 255);
@@ -1243,12 +1273,15 @@ QCheckBox::indicator{
 
 QCheckBox::indicator:unchecked{
 	image: url(:/checkbox/checbox_disable.png);
-
-	transition: 500ms;
 }
 
 QCheckBox::indicator:checked{
 	image: url(:/checkbox/checbox_enable.png);
+}
+
+
+QToolTip{
+	padding: 2px;
 }</string>
               </property>
               <property name="text">
@@ -1391,7 +1424,49 @@ QLineEdit:focus{
              </layout>
             </item>
             <item>
+             <widget class="QLabel" name="label_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>170</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>170</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(224, 27, 36);
+padding-left: 0px;</string>
+              </property>
+              <property name="text">
+               <string>Dimensão inválida</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QCheckBox" name="checkBox_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -1426,12 +1501,15 @@ QCheckBox::indicator{
 
 QCheckBox::indicator:unchecked{
 	image: url(:/checkbox/checbox_disable.png);
-
-	transition: 500ms;
 }
 
 QCheckBox::indicator:checked{
 	image: url(:/checkbox/checbox_enable.png);
+}
+
+
+QToolTip{
+	padding: 2px;
 }</string>
               </property>
               <property name="text">
@@ -1512,7 +1590,49 @@ color: rgb(255, 255, 255);</string>
              </layout>
             </item>
             <item>
+             <widget class="QLabel" name="label_5">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(224, 27, 36);
+padding-left: 0px;</string>
+              </property>
+              <property name="text">
+               <string>O FPS digitado é maior que o do vídeo original</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QCheckBox" name="checkBox_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -1547,12 +1667,15 @@ QCheckBox::indicator{
 
 QCheckBox::indicator:unchecked{
 	image: url(:/checkbox/checbox_disable.png);
-
-	transition: 500ms;
 }
 
 QCheckBox::indicator:checked{
 	image: url(:/checkbox/checbox_enable.png);
+}
+
+
+QToolTip{
+	padding: 2px;
 }</string>
               </property>
               <property name="text">
@@ -1602,6 +1725,10 @@ QPushButton:hover{
 }
 
 
+QToolTip{
+	padding: 2px;
+}
+
 
 </string>
               </property>
@@ -1609,8 +1736,8 @@ QPushButton:hover{
                <string>Selecionar área de rastreio</string>
               </property>
               <property name="icon">
-               <iconset>
-                <normaloff>icons/eyeicon.png</normaloff>icons/eyeicon.png</iconset>
+               <iconset resource="icons/create.qrc">
+                <normaloff>:/eye/eyeicon.png</normaloff>:/eye/eyeicon.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1626,6 +1753,45 @@ QPushButton:hover{
               </property>
               <property name="flat">
                <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_3">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>13</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(224, 27, 36);
+padding-left: 0px;</string>
+              </property>
+              <property name="text">
+               <string>O vídeo deve ser carregador antes de selecionar a área de rastreio</string>
               </property>
              </widget>
             </item>
@@ -1883,8 +2049,59 @@ padding: 0px;</string>
       </layout>
      </widget>
     </item>
+    <item>
+     <spacer name="verticalSpacer_4">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Preferred</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>80</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
     <item alignment="Qt::AlignHCenter">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QLabel" name="label_4">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(224, 27, 36);</string>
+      </property>
+      <property name="text">
+       <string>O vídeo não foi selecionado</string>
+      </property>
+     </widget>
+    </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QPushButton" name="pushButton_rastrear">
       <property name="minimumSize">
        <size>
         <width>460</width>
@@ -1924,6 +2141,9 @@ QPushButton:hover{
 }
 
 
+QToolTip{
+	padding: 2px;
+}
 
 
 
@@ -1934,6 +2154,107 @@ QPushButton:hover{
        <string>Rastrear</string>
       </property>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_5">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>10</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QPushButton" name="pushButton_voltar">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>120</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>120</width>
+        <height>50</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;Volta a tela inicial&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton{
+	background: rgb(68, 88, 88);
+	border-radius: 3px;
+	color: rgb(255, 255, 255);
+
+	padding: 10px;
+
+}
+
+QPushButton:hover{
+	background: rgb(47, 61, 61);
+}
+
+
+QToolTip{
+	padding: 2px;
+}
+
+
+</string>
+      </property>
+      <property name="text">
+       <string>Voltar</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
     </item>
    </layout>
   </widget>
