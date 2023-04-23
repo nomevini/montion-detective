@@ -2,15 +2,19 @@ import cv2
 import os
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
-def reduzir_resolucao_e_fps(video, fps_novo = 8):
+
+def reduzir_resolucao_e_fps(video, dimensao_nova=(640, None), fps_novo=8):
     try:
         clip = VideoFileClip(video)
         fps_antigo = clip.fps
         largura_antiga, altura_antiga = clip.w, clip.h
 
-        proporcao = altura_antiga / largura_antiga
-        largura_nova = 640
-        altura_nova = int(largura_nova * proporcao)
+        if dimensao_nova[0] is not None and dimensao_nova[1] is not None:
+            largura_nova, altura_nova = dimensao_nova
+        else:
+            proporcao = altura_antiga / largura_antiga
+            largura_nova = dimensao_nova[0]
+            altura_nova = dimensao_nova[1] if dimensao_nova[1] is not None else int(largura_nova * proporcao)
 
         cap = cv2.VideoCapture(video)
         codec = cv2.VideoWriter_fourcc(*"mp4v")

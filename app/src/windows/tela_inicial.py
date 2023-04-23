@@ -15,7 +15,7 @@ from PyQt5.QtCore import QTimer, QUrl
 class Ui_TelaInicial(object):
     def setupUi(self, TelaInicial):
         TelaInicial.setObjectName("TelaInicial")
-        TelaInicial.resize(1180, 698)
+        TelaInicial.resize(1202, 698)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -353,7 +353,7 @@ class Ui_TelaInicial(object):
         self.widget.setObjectName("widget")
         self.horizontalLayout_2.addWidget(self.widget)
         self.horizontalLayout.addWidget(self.frame)
-        spacerItem1 = QtWidgets.QSpacerItem(60, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        spacerItem1 = QtWidgets.QSpacerItem(35, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
         self.frame_2 = QtWidgets.QFrame(self.centralwidget)
         font = QtGui.QFont()
@@ -462,7 +462,6 @@ class Ui_TelaInicial(object):
         self.retranslateUi(TelaInicial)
         QtCore.QMetaObject.connectSlotsByName(TelaInicial)
 
-
         self.video_player = QMediaPlayer()
         self.video_player.setVideoOutput(self.widget)
         self.widget.show()
@@ -494,10 +493,9 @@ class Ui_TelaInicial(object):
         self.video_player.play()
 
 
-
     def retranslateUi(self, TelaInicial):
         _translate = QtCore.QCoreApplication.translate
-        TelaInicial.setWindowTitle(_translate("TelaInicial", "MainWindow"))
+        TelaInicial.setWindowTitle(_translate("TelaInicial", "MontionDetective"))
         self.montiondetective.setText(_translate("TelaInicial", "MONTIONDETECTIVE"))
         self.descricao.setText(_translate("TelaInicial", "Detecção e rastreio de pessoas em vídeo"))
         self.pushButton.setToolTip(_translate("TelaInicial", "<html><head/><body><p><span style=\" color:#ffffff;\">Iniciar o rastreamento de pessoas</span></p></body></html>"))
