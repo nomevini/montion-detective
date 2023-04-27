@@ -3,6 +3,9 @@
     <file>checbox_enable.png</file>
     <file>checbox_disable.png</file>
   </qresource>
+  <qresource prefix="image">
+    <file>wallpaperflare.com_wallpaper (1).jpg</file>
+  </qresource>
   <qresource prefix="file_load">
     <file>file.png</file>
     <file>file-hover.png</file>

@@ -5,18 +5,28 @@ from windows.tela_inicial import Ui_TelaInicial
 from windows.tela_carregar_video import Ui_TelaCarregarVideo
 from windows.tela_processamento import TelaProcessamento
 from windows.tela_resultado import TelaResultado
-from PyQt5.QtWidgets import QFileDialog
+from windows.select_image_area import WindowSelectArea
+from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5.QtGui import QPixmap, QImage
+import threading
 import os
 import cv2
+
+from format_video.reduce_FPS_and_resolution import FormatVideo
  
 class App():
 
     def __init__(self):
         self.MainWindow = QtWidgets.QMainWindow()
 
+        # formato de video
+        self.format_video = FormatVideo()
+
         # armazenar caminho do arquivo de video
         self.video_file_path = None
+
+        # coordenas do retangulo
+        self.coordinates = None
 
         # armazenar informações do arquivo de video
         self.video_info = None
@@ -58,6 +68,11 @@ class App():
 
     # verifica se é possivel iniciar o processamento e inicia a tela de selecionar area
     def verify_and_init_processing(self):
+
+        width = None
+        height = None 
+        fps = None
+
         if self.video_file_path is None:
             self.tela_carregar_video.label_erro_video_nao_selecionado.setVisible(True)
         else:
@@ -74,6 +89,9 @@ class App():
                         self.tela_carregar_video.label_erro_dimensao.setText("Dimensões maiores que o video")
                         self.tela_carregar_video.label_erro_dimensao.setVisible(True)
                         return
+                    else:
+                        width = int(self.tela_carregar_video.lineEdit_dimensao_1.text())
+                        height = int(self.tela_carregar_video.lineEdit_dimensao_2.text())
             
             # se o checkbox de reduzir fps estiver marcado, verificar se o campo de fps esta preenchido corretamente
             if self.tela_carregar_video.checkBox_reduzir_fps.isChecked():
@@ -87,10 +105,32 @@ class App():
                         self.tela_carregar_video.label_erro_fps.setText("Fps maior que o video")
                         self.tela_carregar_video.label_erro_fps.setVisible(True)
                         return
-            
+                    else:
+                        fps = int(self.tela_carregar_video.lineEdit_fps.text())
             # tudo certo, iniciar processamento do vídeo
+            # capturar os valores
+            
+            # processado o video
+            video_processed_path = self.format_video.reduce_resolution_and_fps(self.video_file_path, (width, height), fps)
+
+            # iniciar tela de selecionar area
+            self.tela_selecionar_area = WindowSelectArea(video_processed_path, self.MainWindow)
+            
+            self.tela_selecionar_area.show()
+            self.tela_selecionar_area.button.clicked.connect(self.init_processing_window)
+            
+    def init_processing_window(self):
+        self.tela_selecionar_area.close()
+        self.tela_processamento.setupUi(self.MainWindow)
 
 
+        self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
+
+    def cancel_processing(self):
+        # finalizar processamento da yolov8n
+
+        # voltar para de carregar video
+        pass
 
     def validate_dimensao_1(self):
         # validar se o valor é menor que a dimensao do video e maior que 0

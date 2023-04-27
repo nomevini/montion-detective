@@ -1,11 +1,11 @@
-from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QFileDialog
-from PyQt5.QtGui import QPixmap, QPainter, QPen, QImage
-from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtGui import QPixmap, QPainter, QPen, QImage, QFont
+from PyQt5.QtCore import Qt, QPoint, QSize
 from cv2 import VideoCapture, cvtColor, COLOR_BGR2RGB
 
 class WindowSelectArea(QMainWindow):
-    def __init__(self, file_path):
-        super().__init__()
+    def __init__(self, file_path, MainWindow):
+        super().__init__(MainWindow)
         self.label = QLabel(self)
         self.setCentralWidget(self.label)
         self.file_path = file_path
@@ -13,6 +13,49 @@ class WindowSelectArea(QMainWindow):
         self.end = QPoint()
         self.qpixmap = self.open_file()
         self.coordinates = {} # guardar as cordenadas do retangulo
+
+        # Botão Rastrear
+        self.button = QPushButton("Rastrear", self)
+        self.button.setMinimumSize(QSize(460, 50))
+        self.button.setMaximumSize(QSize(460, 50))
+        self.button.setStyleSheet("QPushButton{\n"
+"    background: #552D96;\n"
+"    border-radius: 3px;\n"
+"    color: rgb(255, 255, 255);\n"
+"\n"
+"    position: absolute;\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background: rgb(59, 31, 104);\n"
+"}\n"
+"\n"
+"\n"
+"QToolTip{\n"
+"    padding: 2px;\n"
+"}\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
+        #button.clicked.connect(self.rastrear)
+
+        # Layout Vertical
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        layout.addWidget(self.button,  0, Qt.AlignHCenter)
+        
+        # Widget para o layout
+        widget = QWidget(self)
+        widget.setLayout(layout)
+
+        # Adicionar o widget ao layout central da janela
+        self.setCentralWidget(widget)
+
+
+        # titulo da janela
+        self.setWindowTitle('Selecione a área de rastreio')
 
         self.load_image()        
         
@@ -84,7 +127,7 @@ class WindowSelectArea(QMainWindow):
                     'max': y2
                 }
             }
-            self.exit()
+            ##self.exit()
 
     def paintEvent(self, event):
         super().paintEvent(event)
@@ -103,10 +146,10 @@ class WindowSelectArea(QMainWindow):
             painter.end()
 
             self.label.setPixmap(pixmap)
-
-def get_coordinates(video_path):
-    app = QApplication([])
-    window = WindowSelectArea(video_path)
-    window.show()
-    app.exec_()
-    return window.coordinates
+'''
+app = QApplication([])
+window = WindowSelectArea('example.mp4')
+window.show()
+app.exec_()
+print(window.coordinates)
+'''
