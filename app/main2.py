@@ -128,7 +128,7 @@ class App():
 
     def cancel_processing(self):
         # finalizar processamento da yolov8n
-
+        
         # voltar para de carregar video
         pass
 

@@ -448,7 +448,7 @@ class TelaResultado(object):
         self.label_rsp_velocidade.setText(_translate("MainWindow", " 2.5 pixels/frame"))
         self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-import create_rc
+import app.create_rc as create_rc
 
 
 if __name__ == "__main__":

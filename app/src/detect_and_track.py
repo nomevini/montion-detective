@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 import supervision as sv
-from ..format_video.format_time import video_detection_time
+from app.src.format_time import video_detection_time
 from scipy.spatial import distance
 
 def find_centroid(xyxy):
