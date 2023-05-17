@@ -11,6 +11,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaPlaylist, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtCore import QTimer, QUrl
+from os import getcwd
+
 
 class Ui_TelaInicial(object):
     def setupUi(self, TelaInicial):
@@ -368,21 +370,21 @@ class Ui_TelaInicial(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem2)
-        self.montiondetective = QtWidgets.QLabel(self.frame_2)
+        self.motiondetective = QtWidgets.QLabel(self.frame_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.montiondetective.sizePolicy().hasHeightForWidth())
-        self.montiondetective.setSizePolicy(sizePolicy)
+        sizePolicy.setHeightForWidth(self.motiondetective.sizePolicy().hasHeightForWidth())
+        self.motiondetective.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(30)
         font.setBold(True)
         font.setWeight(75)
-        self.montiondetective.setFont(font)
-        self.montiondetective.setStyleSheet("color: rgb(239, 239, 239);")
-        self.montiondetective.setAlignment(QtCore.Qt.AlignCenter)
-        self.montiondetective.setObjectName("montiondetective")
-        self.verticalLayout_2.addWidget(self.montiondetective)
+        self.motiondetective.setFont(font)
+        self.motiondetective.setStyleSheet("color: rgb(239, 239, 239);")
+        self.motiondetective.setAlignment(QtCore.Qt.AlignCenter)
+        self.motiondetective.setObjectName("motiondetective")
+        self.verticalLayout_2.addWidget(self.motiondetective)
         self.descricao = QtWidgets.QLabel(self.frame_2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -475,7 +477,8 @@ class Ui_TelaInicial(object):
         self.timer.timeout.connect(self.playVideo)
         self.timer.start()
 
-        file_path = '/home/nomevini/Documentos/Iniciação Cientifica/Projeto/tracking_people_in_videos/app/src/windows/example.mp4'
+        # capturar o caminho atual do arquivo 
+        file_path = f'{getcwd()}/app/src/windows/example.mp4'
 
         self.playlist.clear()
         self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(file_path)))
@@ -495,8 +498,8 @@ class Ui_TelaInicial(object):
 
     def retranslateUi(self, TelaInicial):
         _translate = QtCore.QCoreApplication.translate
-        TelaInicial.setWindowTitle(_translate("TelaInicial", "MontionDetective"))
-        self.montiondetective.setText(_translate("TelaInicial", "MONTIONDETECTIVE"))
+        TelaInicial.setWindowTitle(_translate("TelaInicial", "MotionDetective"))
+        self.motiondetective.setText(_translate("TelaInicial", "MOTIONDETECTIVE"))
         self.descricao.setText(_translate("TelaInicial", "Detecção e rastreio de pessoas em vídeo"))
         self.pushButton.setToolTip(_translate("TelaInicial", "<html><head/><body><p><span style=\" color:#ffffff;\">Iniciar o rastreamento de pessoas</span></p></body></html>"))
         self.pushButton.setText(_translate("TelaInicial", "Rastrear Pessoas"))
