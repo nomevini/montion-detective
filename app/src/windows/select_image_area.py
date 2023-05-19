@@ -137,19 +137,15 @@ class WindowSelectArea(QMainWindow):
             painter.setPen(QPen(Qt.red, 2, Qt.SolidLine))
 
             # Verifica se a seleção ultrapassa as bordas da imagem
-            x1 = max(min(self.origin.x(), self.end.x()), 0)
-            y1 = max(min(self.origin.y(), self.end.y()), 0)
-            x2 = min(max(self.origin.x(), self.end.x()), pixmap.width() - 1)
-            y2 = min(max(self.origin.y(), self.end.y()), pixmap.height() - 1)
+            x1 = max(min(self.origin.x(), self.end.x() - 10), 0)
+            y1 = max(min(self.origin.y(), self.end.y() + int(self.button.height()/2)), 0)
+            x2 = min(max(self.origin.x(), self.end.x() - 10), pixmap.width() - 1)
+            y2 = min(max(self.origin.y(), self.end.y() + int(self.button.height()/2)), pixmap.height() - 1)
 
             painter.drawRect(x1, y1, x2 - x1, y2 - y1)
             painter.end()
 
+            # Copia o pixmap temporário para o pixmap original da QLabel
             self.label.setPixmap(pixmap)
-'''
-app = QApplication([])
-window = WindowSelectArea('example.mp4')
-window.show()
-app.exec_()
-print(window.coordinates)
-'''
+
+        
