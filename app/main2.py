@@ -206,7 +206,7 @@ class App():
 
     def select_video_file(self):    
 
-        if self.video_file_path is None:
+        if self.video_file_path is None or self.video_file_path is '':
             options = QFileDialog.Options()
             options |= QFileDialog.DontUseNativeDialog
             self.video_file_path, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Arquivos de Vídeo (*.mp4 *.avi *.mkv *.mov)", options=options)

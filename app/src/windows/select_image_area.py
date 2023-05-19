@@ -6,18 +6,29 @@ from cv2 import VideoCapture, cvtColor, COLOR_BGR2RGB
 class WindowSelectArea(QMainWindow):
     def __init__(self, file_path, MainWindow):
         super().__init__(MainWindow)
-        self.label = QLabel(self)
-        self.setCentralWidget(self.label)
         self.file_path = file_path
         self.origin = QPoint()
         self.end = QPoint()
-        self.qpixmap = self.open_file()
+        
         self.coordinates = {} # guardar as cordenadas do retangulo
 
-        # Botão Rastrear
-        self.button = QPushButton("Rastrear", self)
+        self.qpixmap = self.open_file()
+
+        # titulo da janela
+        self.setWindowTitle('Selecione a área de rastreio')
+
+        self.label = QLabel(self)
+        
+
+        self.button = QPushButton('Rastrear', self)
         self.button.setMinimumSize(QSize(460, 50))
         self.button.setMaximumSize(QSize(460, 50))
+        font = QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.button.setFont(font)
+        self.button.setMouseTracking(True)
         self.button.setStyleSheet("QPushButton{\n"
 "    background: #552D96;\n"
 "    border-radius: 3px;\n"
@@ -39,26 +50,18 @@ class WindowSelectArea(QMainWindow):
 "\n"
 "\n"
 "")
-        #button.clicked.connect(self.rastrear)
 
-        # Layout Vertical
         layout = QVBoxLayout()
         layout.addWidget(self.label)
-        layout.addWidget(self.button,  0, Qt.AlignHCenter)
-        
-        # Widget para o layout
-        widget = QWidget(self)
-        widget.setLayout(layout)
+        layout.addWidget(self.button, 0, Qt.AlignHCenter)
 
-        # Adicionar o widget ao layout central da janela
+        self.label.setPixmap(self.qpixmap)
+        self.label.setFixedSize(self.qpixmap.width(), self.qpixmap.height())
+
+        widget = QWidget()
+        widget.setLayout(layout)
         self.setCentralWidget(widget)
 
-
-        # titulo da janela
-        self.setWindowTitle('Selecione a área de rastreio')
-
-        self.load_image()        
-        
     # fechar a janela
     def exit(self):
         QApplication.quit()
@@ -70,24 +73,18 @@ class WindowSelectArea(QMainWindow):
         # Verificar se o frame foi lido corretamente
         if not ret:
             raise Exception(f"Não foi possível ler o primeiro frame do arquivo {self.file_path}")
-        
 
         frame = cvtColor(frame, COLOR_BGR2RGB)
 
         # Cria um objeto QImage a partir do frame
         h, w, ch = frame.shape
-        bytes_per_line = ch * w
-        qimage = QImage(frame.data, w, h, bytes_per_line, QImage.Format_RGB888)
+        qimage = QImage(frame.data, w, h, ch * w, QImage.Format_RGB888)
 
         # Cria um objeto QPixmap a partir do QImage
         qpixmap = QPixmap.fromImage(qimage)
 
         cap.release() # Fechar o vídeo
         return qpixmap # Retornar o objeto QPixmap
-
-    def load_image(self):
-        self.label.setPixmap(self.qpixmap)
-        self.setFixedSize(self.qpixmap.width(), self.qpixmap.height())
 
     def clear_selection(self):
         self.origin = QPoint()
@@ -101,12 +98,10 @@ class WindowSelectArea(QMainWindow):
             self.end = event.pos()
             self.update()
         
-       
     def mouseMoveEvent(self, event):
         if event.buttons() == Qt.LeftButton:
             self.end = event.pos()
             self.update() 
-    
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -127,8 +122,7 @@ class WindowSelectArea(QMainWindow):
                     'max': y2
                 }
             }
-            ##self.exit()
-
+    
     def paintEvent(self, event):
         super().paintEvent(event)
         if not self.origin.isNull() and not self.end.isNull():
@@ -137,15 +131,12 @@ class WindowSelectArea(QMainWindow):
             painter.setPen(QPen(Qt.red, 2, Qt.SolidLine))
 
             # Verifica se a seleção ultrapassa as bordas da imagem
-            x1 = max(min(self.origin.x(), self.end.x() - 10), 0)
-            y1 = max(min(self.origin.y(), self.end.y() + int(self.button.height()/2)), 0)
+            x1 = max(min(self.origin.x(), self.end.x() + 10), 0)
+            y1 = max(min(self.origin.y(), self.end.y() + 10), 0)
             x2 = min(max(self.origin.x(), self.end.x() - 10), pixmap.width() - 1)
-            y2 = min(max(self.origin.y(), self.end.y() + int(self.button.height()/2)), pixmap.height() - 1)
+            y2 = min(max(self.origin.y(), self.end.y() - 10), pixmap.height() - 1)
 
             painter.drawRect(x1, y1, x2 - x1, y2 - y1)
             painter.end()
 
-            # Copia o pixmap temporário para o pixmap original da QLabel
             self.label.setPixmap(pixmap)
-
-        
