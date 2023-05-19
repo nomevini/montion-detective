@@ -25,7 +25,7 @@ class FormatVideo:
             resolucao = (largura_nova, altura_nova)
             proporcao_str = f'{largura_nova}x{altura_nova}'
 
-            path_out = "app/src/videos_resized"
+            path_out = "src/videos_resized"
 
             # criar diretorio caso nao exista
             if not os.path.exists(path_out):

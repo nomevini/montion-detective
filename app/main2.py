@@ -54,6 +54,10 @@ class App():
         self.tela_inicial.video_player.stop()
 
         self.tela_carregar_video.setupUi(self.MainWindow)
+        
+        if self.video_file_path is not None:
+            self.select_video_file()
+        
         self.tela_carregar_video.pushButton_voltar.clicked.connect(self.init_main_window)
         self.tela_carregar_video.pushButton_carregar_video.clicked.connect(self.select_video_file)
         
@@ -130,7 +134,7 @@ class App():
         # finalizar processamento da yolov8n
         
         # voltar para de carregar video
-        pass
+        self.tela_processamento.pushButton_cancelar.clicked.connect(self.init_load_video_window)
 
     def validate_dimensao_1(self):
         # validar se o valor é menor que a dimensao do video e maior que 0
@@ -201,9 +205,11 @@ class App():
             self.tela_carregar_video.label_erro_fps.setVisible(False)
 
     def select_video_file(self):    
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        self.video_file_path, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Arquivos de Vídeo (*.mp4 *.avi *.mkv *.mov)", options=options)
+
+        if self.video_file_path is None:
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            self.video_file_path, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Arquivos de Vídeo (*.mp4 *.avi *.mkv *.mov)", options=options)
 
         if self.video_file_path:
             # escrever no label o nove do arquivo

@@ -478,7 +478,7 @@ class Ui_TelaInicial(object):
         self.timer.start()
 
         # capturar o caminho atual do arquivo 
-        file_path = f'{getcwd()}/app/src/windows/example.mp4'
+        file_path = f'{getcwd()}/src/windows/example.mp4'
 
         self.playlist.clear()
         self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(file_path)))
