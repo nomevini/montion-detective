@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 import supervision as sv
-from app.src.format_time import video_detection_time
+from format_time import video_detection_time
 from scipy.spatial import distance
 
 def find_centroid(xyxy):
@@ -85,8 +85,8 @@ def detect_and_track(model_name, video_path, detection_area = None):
     
         labels = [
             f"{tracker_id}"
-            for _, _ , _, tracker_id
-            in detections
+            for tracker_id
+            in detections.tracker_id
         ]
 
         # Desenhar no frame o quadro com as detecções
@@ -102,9 +102,12 @@ def detect_and_track(model_name, video_path, detection_area = None):
 
         if (cv2.waitKey(30) == 27):
             break
+
         
     # calcular a velocidade de cada pessoa
     for id in people_velocity.keys():
+        print("frames detect counter")
+        print(frames_detect_counter[id])
         people_velocity[id]['velocity'] = people_velocity[id]['travelled_distance'] / video_detection_time(frames_detect_counter[id], fps)
 
     # Salva as informações das detecções
@@ -120,3 +123,7 @@ def detect_and_track(model_name, video_path, detection_area = None):
     cv2.destroyAllWindows()
 
     return info_detections
+
+
+if __name__ == '__main__':
+    detect_and_track('yolov8n', 'pedestrian_cut_640x320_10_fps.mp4')
