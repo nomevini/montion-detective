@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 import supervision as sv
-from format_time import video_detection_time
+from format_time import video_detection_time, seconds_to_time
 from scipy.spatial import distance
 
 def find_centroid(xyxy):
@@ -10,7 +10,7 @@ def find_centroid(xyxy):
     cy = (y1 + y2) / 2.0
     return cx, cy
 
-def detect_and_track(model_name, video_path, detection_area = None):
+def detect_and_track(model_name, video_path, detection_area = None, frame_a_frame = False):
     
     box_annotator = sv.BoxAnnotator(
         thickness=2,
@@ -35,14 +35,21 @@ def detect_and_track(model_name, video_path, detection_area = None):
     people_velocity = {}
     detections = None
 
-    for result in model.track(source=video_path, stream=True, agnostic_nms=True, classes=[0]):
-        frame = result.orig_img
+    # Numero atual do frame
+    frame_number = 0
 
+    # Informacoes das deteccoes de todos os frames (caso analise frame a frame esteja ativado)
+    info_detections = {}
+
+    for result in model.track(source=video_path, stream=True, agnostic_nms=True, classes=[0]):
+        frame_number += 1
+        frame = result.orig_img
+        
         detections = sv.Detections.from_yolov8(result)
 
         if result.boxes.id is not None:
             detections.tracker_id = result.boxes.id.cpu().numpy().astype(int)
-
+            
             # contar todas as deteccoes do frame
             for identifier in result.boxes.id:
                 id_int = int(identifier)
@@ -54,18 +61,27 @@ def detect_and_track(model_name, video_path, detection_area = None):
                     # calcular a velocidade da pessoa
                     people_velocity[id_int]['travelled_distance'] = people_velocity[id_int]['travelled_distance'] + distance.euclidean(previous_position, actual_position)
                     people_velocity[id_int]['previous_position_in_frame'] = actual_position
+
+                    # calcular a velocidade da pessoa (isso aqui não pode usar a funcao de video)
+                    '''
+                    people_velocity[id_int]['velocity'] = people_velocity[id_int]['travelled_distance'] / video_detection_time(frames_detect_counter[id_int], fps)
+                    '''
                     
+                    # calcular a velocidade da pessoa
+                    seconds = frames_detect_counter[id_int] / fps
+                    people_velocity[id_int]['velocity'] = people_velocity[id_int]['travelled_distance'] / seconds
+
                     frames_detect_counter[id_int] = frames_detect_counter[id_int] + 1
+
                 else:
                     frames_detect_counter[id_int] = 1
 
                     people_velocity[id_int] = {
                         'travelled_distance': 0,
-                        'previous_position_in_frame': find_centroid(detections[detections.tracker_id == id_int].xyxy[0])
+                        'previous_position_in_frame': find_centroid(detections[detections.tracker_id == id_int].xyxy[0]),
+                        'velocity': 0
                     }
         
-
-
         detections = detections[(detections.class_id == 0)]
 
         # desenhar apenas as deteccoes que estao dentro da area de interesse
@@ -96,26 +112,29 @@ def detect_and_track(model_name, video_path, detection_area = None):
             labels=labels
         )
 
+        # reorganizar as informacoes de velocity
+        final_people_velocity = {}
+        for id, velocity_person in people_velocity.items():
+            final_people_velocity[id] = velocity_person["velocity"]
+
+
+        # salvar as informacoes das deteccoes frame a frame
+
+        if frame_a_frame:
+            info_detections[frame_number] = {
+                'id': detections.tracker_id,
+                'frames_counter': frames_detect_counter,
+                'detection_time': video_detection_time(frames_detect_counter, fps),
+                'velocity': final_people_velocity
+            }
+
+
         # Escreve o quadro processado no arquivo de vídeo de saída
         output_video.write(frame)
         cv2.imshow(model_name, frame)
 
         if (cv2.waitKey(30) == 27):
             break
-
-        
-    # calcular a velocidade de cada pessoa
-    for id in people_velocity.keys():
-        print("frames detect counter")
-        print(frames_detect_counter[id])
-        people_velocity[id]['velocity'] = people_velocity[id]['travelled_distance'] / video_detection_time(frames_detect_counter[id], fps)
-
-    # Salva as informações das detecções
-    info_detections = {
-        'id': frames_detect_counter.keys(),
-        'frames_counter': frames_detect_counter,
-        'detection_time': video_detection_time(frames_detect_counter, fps),
-    }
 
     # Libera os objetos do vídeo e fecha a janela
     input_video.release()
@@ -126,4 +145,13 @@ def detect_and_track(model_name, video_path, detection_area = None):
 
 
 if __name__ == '__main__':
-    detect_and_track('yolov8n', 'pedestrian_cut_640x320_10_fps.mp4')
+    infos = detect_and_track('yolov8n', 'pedestrian_cut_640x320_7_fps.mp4')
+    
+    # imprime as informacoes das deteccoes
+    for frame, deteccoes in infos.items():
+        print(f'frame: {frame}')
+        print(f'deteccoes: {deteccoes}')
+        print('\n')
+        print('\n')
+        print('\n')
+
