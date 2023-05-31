@@ -40,12 +40,15 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
 
     # Informacoes das deteccoes de todos os frames (caso analise frame a frame esteja ativado)
     info_detections = {}
+    final_people_velocity = {}
 
     for result in model.track(source=video_path, stream=True, agnostic_nms=True, classes=[0]):
         frame_number += 1
         frame = result.orig_img
         
         detections = sv.Detections.from_yolov8(result)
+
+        detections = detections[(detections.class_id == 0)]
 
         if result.boxes.id is not None:
             detections.tracker_id = result.boxes.id.cpu().numpy().astype(int)
@@ -72,7 +75,6 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
                     people_velocity[id_int]['velocity'] = people_velocity[id_int]['travelled_distance'] / seconds
 
                     frames_detect_counter[id_int] = frames_detect_counter[id_int] + 1
-
                 else:
                     frames_detect_counter[id_int] = 1
 
@@ -82,7 +84,7 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
                         'velocity': 0
                     }
         
-        detections = detections[(detections.class_id == 0)]
+        
 
         # desenhar apenas as deteccoes que estao dentro da area de interesse
         if detection_area is not None:
@@ -113,7 +115,6 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
         )
 
         # reorganizar as informacoes de velocity
-        final_people_velocity = {}
         for id, velocity_person in people_velocity.items():
             final_people_velocity[id] = velocity_person["velocity"]
 
@@ -136,6 +137,13 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
         if (cv2.waitKey(30) == 27):
             break
 
+    info_detections['full_video'] = {
+        'id': frames_detect_counter.keys(),
+        'frames_counter': frames_detect_counter,
+        'detection_time': video_detection_time(frames_detect_counter, fps),
+        'velocity': final_people_velocity
+    }
+
     # Libera os objetos do vídeo e fecha a janela
     input_video.release()
     output_video.release()
@@ -145,7 +153,7 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
 
 
 if __name__ == '__main__':
-    infos = detect_and_track('yolov8n', 'pedestrian_cut_640x320_7_fps.mp4')
+    infos = detect_and_track('yolov8n', 'pedestrian_cut_640x320_7_fps.mp4', frame_a_frame=True)
     
     # imprime as informacoes das deteccoes
     for frame, deteccoes in infos.items():
@@ -154,4 +162,3 @@ if __name__ == '__main__':
         print('\n')
         print('\n')
         print('\n')
-
