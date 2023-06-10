@@ -8,6 +8,7 @@ from src.windows.tela_resultado import TelaResultado
 from src.windows.select_image_area import WindowSelectArea
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5.QtGui import QPixmap, QImage
+from src.detect_and_track import *
 import threading
 import os
 import cv2
@@ -123,10 +124,14 @@ class App():
             self.tela_selecionar_area.show()
             self.tela_selecionar_area.button.clicked.connect(self.init_processing_window)
             
+
+    # iniciar processamento do vídeo
     def init_processing_window(self):
         self.tela_selecionar_area.close()
         self.tela_processamento.setupUi(self.MainWindow)
 
+        # iniciar processamento do vídeo
+        detect_and_track('yolov8n', self.video_file_path, self.tela_processamento)
 
         self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
 
@@ -206,7 +211,7 @@ class App():
 
     def select_video_file(self):    
 
-        if self.video_file_path is None or self.video_file_path is '':
+        if self.video_file_path is None or self.video_file_path == '':
             options = QFileDialog.Options()
             options |= QFileDialog.DontUseNativeDialog
             self.video_file_path, _ = QFileDialog.getOpenFileName(None, "Selecione o arquivo de vídeo", "", "Arquivos de Vídeo (*.mp4 *.avi *.mkv *.mov)", options=options)

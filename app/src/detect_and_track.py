@@ -1,8 +1,40 @@
 import cv2
 from ultralytics import YOLO
 import supervision as sv
-from format_time import video_detection_time, seconds_to_time
 from scipy.spatial import distance
+
+import datetime
+
+def seconds_to_time(seconds):
+    hours = seconds // 3600  # Integer number of hours
+    remaining_seconds = seconds % 3600  # Seconds remaining after hours
+
+    minutes = remaining_seconds // 60  # Integer number of minutes
+    final_seconds = remaining_seconds % 60  # Seconds remaining after minutes
+
+    # Extract milliseconds
+    milliseconds = round((final_seconds - int(final_seconds)) * 1000)
+
+    time = datetime.time(int(hours), int(minutes), int(final_seconds), int(milliseconds * 1000))
+
+    return time
+
+# calcular o tempo que cada deteccao esteve no video
+def video_detection_time(frames_counter, video_fps):
+    if frames_counter is not None:
+        detection_time = {}
+        
+        for id, qtde_frames in frames_counter.items():
+            seconds = qtde_frames / video_fps
+            detection_time[id] = seconds_to_time(seconds)
+            
+        return detection_time
+    
+# imprime o tempo de todas as deteccoes
+def print_formatted_time(time_dict):
+    for identifier, time in time_dict.items():
+        formatted_time = time.strftime("%H:%M:%S.%f")[:-3]  # Formata o tempo como "hh:mm:ss.mmm"
+        print(formatted_time)
 
 def find_centroid(xyxy):
     x1, y1, x2, y2 = xyxy
@@ -10,7 +42,7 @@ def find_centroid(xyxy):
     cy = (y1 + y2) / 2.0
     return cx, cy
 
-def detect_and_track(model_name, video_path, detection_area = None, frame_a_frame = False):
+def detect_and_track(model_name, video_path, window, detection_area = None, frame_a_frame = False):
     
     box_annotator = sv.BoxAnnotator(
         thickness=2,
@@ -132,6 +164,10 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
 
         # Escreve o quadro processado no arquivo de vídeo de saída
         output_video.write(frame)
+        
+        # Atualiza a janela com o quadro processado
+        window.update_image(frame)
+
         cv2.imshow(model_name, frame)
 
         if (cv2.waitKey(30) == 27):
@@ -153,7 +189,7 @@ def detect_and_track(model_name, video_path, detection_area = None, frame_a_fram
 
 
 if __name__ == '__main__':
-    infos = detect_and_track('yolov8n', 'pedestrian_cut_640x320_7_fps.mp4', frame_a_frame=True)
+    infos = detect_and_track('yolov8n', 'pedestrian_cut_640x320_7_fps.mp4', frame_a_frame=False)
     
     # imprime as informacoes das deteccoes
     for frame, deteccoes in infos.items():
