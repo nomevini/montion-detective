@@ -168,7 +168,7 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
         # Atualiza a janela com o quadro processado
         window.update_image(frame)
 
-        cv2.imshow(model_name, frame)
+        #cv2.imshow(model_name, frame)
 
         if (cv2.waitKey(30) == 27):
             break
@@ -180,6 +180,7 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
         'velocity': final_people_velocity
     }
 
+    
     # Libera os objetos do vídeo e fecha a janela
     input_video.release()
     output_video.release()

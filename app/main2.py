@@ -32,11 +32,14 @@ class App():
         # armazenar informações do arquivo de video
         self.video_info = None
 
+        # estado do processamento do video
+        self.processing_status = False
+
         # carregar todas as telas
         self.tela_inicial = Ui_TelaInicial() # tela inicial
         self.tela_carregar_video = Ui_TelaCarregarVideo() # tela carregar video
         self.tela_processamento = TelaProcessamento() # tela processamento
-        #self.tela_resultados = TelaResultados() # tela resultados
+        self.tela_resultados = TelaResultado() # tela resultados
 
         self.init_main_window()
         self.MainWindow.show()
@@ -129,12 +132,21 @@ class App():
     def init_processing_window(self):
         self.tela_selecionar_area.close()
         self.tela_processamento.setupUi(self.MainWindow)
-
-        # iniciar processamento do vídeo
-        detect_and_track('yolov8n', self.video_file_path, self.tela_processamento)
-
+        
         self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
 
+        # etapas
+        # Iniciar o processo de detecção e rastreamento em uma thread
+        my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento))
+        my_thread.start()
+
+        # ficar na tela de processamento até a conclusão do processamento 
+        # e em seguida, mudar para a tela de resultados
+
+
+        #self.tela_resultados.setupUi(self.MainWindow)
+    
+    
     def cancel_processing(self):
         # finalizar processamento da yolov8n
         
