@@ -10,7 +10,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLabel
-
+import cv2
 
 class TelaProcessamento(object):
     def setupUi(self, MainWindow):
@@ -140,7 +140,7 @@ class TelaProcessamento(object):
 "\n"
 "\n"
 "")
-        self.progressBar.setProperty("value", 25)
+        self.progressBar.setProperty("value", 0)
         self.progressBar.setAlignment(QtCore.Qt.AlignCenter)
         self.progressBar.setTextVisible(True)
         self.progressBar.setInvertedAppearance(False)
@@ -207,10 +207,21 @@ class TelaProcessamento(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def update_image(self, frame):
-        height, width, _ = frame.shape
+    def update_progress(self, frame, percent, people_count):
+        # Converta o frame para o formato RGB
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        
+        height, width, _ = frame_rgb.shape
         bytes_per_line = 3 * width
-        q_image = QtGui.QImage(frame.data, width, height, bytes_per_line, QtGui.QImage.Format_RGB888)
+
+        # atualizar o número de pessoas detectadas
+        _translate = QtCore.QCoreApplication.translate
+        self.label_pessoas_detectadas.setText(_translate("MainWindow", f"{people_count} PESSOAS DETECTADAS"))
+
+        # atualizar o percentual de progresso
+        self.progressBar.setValue(percent)
+
+        q_image = QtGui.QImage(frame_rgb.data, width, height, bytes_per_line, QtGui.QImage.Format_RGB888)
         pixmap = QtGui.QPixmap.fromImage(q_image)
         self.image_label.setPixmap(pixmap)
 
@@ -219,7 +230,7 @@ class TelaProcessamento(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.text_video_processando.setText(_translate("MainWindow", "Seu vídeo está sendo processado"))
-        self.label_pessoas_detectadas.setText(_translate("MainWindow", "19 PESSOAS DETECTADAS"))
+        self.label_pessoas_detectadas.setText(_translate("MainWindow", "0 PESSOAS DETECTADAS"))
         self.pushButton_cancelar.setText(_translate("MainWindow", "Cancelar"))
 
 

@@ -70,6 +70,9 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     # Numero atual do frame
     frame_number = 0
 
+    # Obtenha o número total de frames do vídeo
+    total_frames = int(input_video.get(cv2.CAP_PROP_FRAME_COUNT))
+
     # Informacoes das deteccoes de todos os frames (caso analise frame a frame esteja ativado)
     info_detections = {}
     final_people_velocity = {}
@@ -164,9 +167,16 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
         # Escreve o quadro processado no arquivo de vídeo de saída
         output_video.write(frame)
+
+        # calcular o percentual de processamento do video
+        percent = int((frame_number / total_frames) * 100)
+
+        # capturar a quantidade de pessoas detectadas até o momento
+        total_people_detected = list(frames_detect_counter.keys())[-1]
+        print(total_people_detected)
         
         # Atualiza a janela com o quadro processado
-        window.update_image(frame)
+        window.update_progress(frame, percent, total_people_detected)
 
         #cv2.imshow(model_name, frame)
 
@@ -180,7 +190,6 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
         'velocity': final_people_velocity
     }
 
-    
     # Libera os objetos do vídeo e fecha a janela
     input_video.release()
     output_video.release()

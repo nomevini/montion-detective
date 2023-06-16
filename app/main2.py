@@ -26,7 +26,7 @@ class App():
         # armazenar caminho do arquivo de video
         self.video_file_path = None
 
-        # coordenas do retangulo
+        # coordenadas do retangulo
         self.coordinates = None
 
         # armazenar informações do arquivo de video
@@ -124,12 +124,29 @@ class App():
             # iniciar tela de selecionar area
             self.tela_selecionar_area = WindowSelectArea(video_processed_path, self.MainWindow)
             
+            
             self.tela_selecionar_area.show()
             self.tela_selecionar_area.button.clicked.connect(self.init_processing_window)
             
 
     # iniciar processamento do vídeo
     def init_processing_window(self):
+
+        self.coordinates = self.tela_selecionar_area.coordinates
+
+        if not self.coordinates:
+            self.coordinates = {
+                'x':{
+                    'min': 0,
+                    'max': self.video_info['width']
+                }
+                ,
+                'y':{
+                    'min': 0,
+                    'max': self.video_info['height']
+                }
+            }
+
         self.tela_selecionar_area.close()
         self.tela_processamento.setupUi(self.MainWindow)
         
@@ -137,7 +154,7 @@ class App():
 
         # etapas
         # Iniciar o processo de detecção e rastreamento em uma thread
-        my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento))
+        my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento, self.coordinates))
         my_thread.start()
 
         # ficar na tela de processamento até a conclusão do processamento 
