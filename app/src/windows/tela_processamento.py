@@ -214,6 +214,8 @@ class TelaProcessamento(object):
         height, width, _ = frame_rgb.shape
         bytes_per_line = 3 * width
 
+        print(people_count)
+
         # atualizar o número de pessoas detectadas
         _translate = QtCore.QCoreApplication.translate
         self.label_pessoas_detectadas.setText(_translate("MainWindow", f"{people_count} PESSOAS DETECTADAS"))

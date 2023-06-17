@@ -173,7 +173,6 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
         # capturar a quantidade de pessoas detectadas até o momento
         total_people_detected = list(frames_detect_counter.keys())[-1]
-        print(total_people_detected)
         
         # Atualiza a janela com o quadro processado
         window.update_progress(frame, percent, total_people_detected)
