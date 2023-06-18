@@ -124,7 +124,6 @@ class App():
             # iniciar tela de selecionar area
             self.tela_selecionar_area = WindowSelectArea(video_processed_path, self.MainWindow)
             
-            
             self.tela_selecionar_area.show()
             self.tela_selecionar_area.button.clicked.connect(self.init_processing_window)
             
@@ -154,7 +153,7 @@ class App():
 
         # etapas
         # Iniciar o processo de detecção e rastreamento em uma thread
-        my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento, self.coordinates))
+        my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento, self, self.coordinates))
         my_thread.start()
 
         # ficar na tela de processamento até a conclusão do processamento 
@@ -162,6 +161,10 @@ class App():
 
 
         #self.tela_resultados.setupUi(self.MainWindow)
+
+    def present_results(self):
+        # apresentar os resultados na tela de resultados
+        self.tela_resultados.setupUi(self.MainWindow)
     
     
     def cancel_processing(self):
