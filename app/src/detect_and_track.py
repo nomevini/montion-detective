@@ -80,17 +80,38 @@ def detect_and_track(model_name, video_path, window, app, detection_area = None,
     for result in model.track(source=video_path, stream=True, agnostic_nms=True, classes=[0]):
         frame_number += 1
         frame = result.orig_img
-        
+
         detections = sv.Detections.from_yolov8(result)
 
         detections = detections[(detections.class_id == 0)]
 
-        if result.boxes.id is not None:
-            detections.tracker_id = result.boxes.id.cpu().numpy().astype(int)
+        detections.tracker_id = result.boxes.id.cpu().numpy().astype(int)
+        
+        if detections.tracker_id is not None:
             
+
+            # desenhar apenas as deteccoes que estao dentro da area de interesse
+            # posso remover essa condição, pois sempre haverá uma area de detecção
+            if detection_area is not None:
+                # desenha o retangulo da area de interesse
+                cv2.rectangle(frame, (detection_area['x']['min'], detection_area['y']['min']), (detection_area['x']['max'], detection_area['y']['max']), (0, 255, 0), 2)
+
+                xmin = detections.xyxy[:, 0]
+                ymin = detections.xyxy[:, 1]
+                xmax = detections.xyxy[:, 2]
+                ymax = detections.xyxy[:, 3]
+
+                condition = ((xmax > detection_area['x']['min']) & (ymax > detection_area['y']['min'])) & ((xmin < detection_area['x']['max']) & (ymin < detection_area['y']['max']))
+
+                detections = detections[condition]
+            
+            print(f'tracker_id {detections.tracker_id}')
+
             # contar todas as deteccoes do frame
-            for identifier in result.boxes.id:
+            for identifier in detections.tracker_id:
                 id_int = int(identifier)
+                print(f'Boxes id {id_int}')
+                
                 if id_int in frames_detect_counter.keys(): 
                     # encontra posicao atual da pessoa
                     actual_position = find_centroid(detections[detections.tracker_id == id_int].xyxy[0])
@@ -118,24 +139,8 @@ def detect_and_track(model_name, video_path, window, app, detection_area = None,
                         'previous_position_in_frame': find_centroid(detections[detections.tracker_id == id_int].xyxy[0]),
                         'velocity': 0
                     }
-        
-        
 
-        # desenhar apenas as deteccoes que estao dentro da area de interesse
-        if detection_area is not None:
-
-            # desenha o retangulo da area de interesse
-            cv2.rectangle(frame, (detection_area['x']['min'], detection_area['y']['min']), (detection_area['x']['max'], detection_area['y']['max']), (0, 255, 0), 2)
-
-            xmin = detections.xyxy[:, 0]
-            ymin = detections.xyxy[:, 1]
-            xmax = detections.xyxy[:, 2]
-            ymax = detections.xyxy[:, 3]
-
-            condition = ((xmax > detection_area['x']['min']) & (ymax > detection_area['y']['min'])) & ((xmin < detection_area['x']['max']) & (ymin < detection_area['y']['max']))
-
-            detections = detections[condition]
-    
+        # Desenhar no frame o quadro com as detecções
         labels = [
             f"{tracker_id}"
             for tracker_id
@@ -178,7 +183,6 @@ def detect_and_track(model_name, video_path, window, app, detection_area = None,
 
         if percent == 100:
             app.present_results()
-
 
     info_detections['full_video'] = {
         'id': frames_detect_counter.keys(),

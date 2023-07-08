@@ -127,7 +127,6 @@ class App():
             self.tela_selecionar_area.show()
             self.tela_selecionar_area.button.clicked.connect(self.init_processing_window)
             
-
     # iniciar processamento do vídeo
     def init_processing_window(self):
 
@@ -156,16 +155,9 @@ class App():
         my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento, self, self.coordinates))
         my_thread.start()
 
-        # ficar na tela de processamento até a conclusão do processamento 
-        # e em seguida, mudar para a tela de resultados
-
-
-        #self.tela_resultados.setupUi(self.MainWindow)
-
     def present_results(self):
         # apresentar os resultados na tela de resultados
         self.tela_resultados.setupUi(self.MainWindow)
-    
     
     def cancel_processing(self):
         # finalizar processamento da yolov8n
