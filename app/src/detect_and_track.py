@@ -42,7 +42,7 @@ def find_centroid(xyxy):
     cy = (y1 + y2) / 2.0
     return cx, cy
 
-def detect_and_track(model_name, video_path, window, app, detection_area = None, frame_a_frame = False, ):
+def detect_and_track(model_name, video_path, window, detection_area = None, frame_a_frame = False, ):
     
     box_annotator = sv.BoxAnnotator(
         thickness=2,
@@ -180,9 +180,6 @@ def detect_and_track(model_name, video_path, window, app, detection_area = None,
         
         # Atualiza a janela com o quadro processado
         window.update_progress(frame, percent, total_people_detected)
-
-        if percent == 100:
-            app.present_results()
 
     info_detections['full_video'] = {
         'id': frames_detect_counter.keys(),

@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5 import QtWidgets, QtCore
 from src.windows.tela_inicial import Ui_TelaInicial
 from src.windows.tela_carregar_video import Ui_TelaCarregarVideo
@@ -14,7 +14,27 @@ import os
 import cv2
 
 from src.reduce_FPS_and_resolution import FormatVideo
- 
+
+class DetectAndTrackThread(QThread):
+    finished = pyqtSignal()  # Sinal para notificar a thread principal
+
+    def __init__(self, yolo_model, video_file_path, tela_processamento, coordinates):
+        super().__init__()
+        self.yolo = yolo_model
+        self.video_file_path = video_file_path
+        self.tela_processamento = tela_processamento
+        self.coordinates = coordinates
+
+
+    def run(self):
+        # Esta função será executada em uma nova thread
+
+        # executar a funcao detect_and_track
+        detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates)
+
+        self.finished.emit()  # Emite o sinal quando a segunda thread terminar
+
+
 class App():
 
     def __init__(self):
@@ -152,8 +172,9 @@ class App():
 
         # etapas
         # Iniciar o processo de detecção e rastreamento em uma thread
-        my_thread = threading.Thread(target=detect_and_track, args=('yolov8n', self.video_file_path, self.tela_processamento, self, self.coordinates))
-        my_thread.start()
+        self.detect_and_track_thread = DetectAndTrackThread('yolov8n', self.video_file_path, self.tela_processamento, self.coordinates)
+        self.detect_and_track_thread.finished.connect(self.present_results)
+        self.detect_and_track_thread.start()
 
     def present_results(self):
         # apresentar os resultados na tela de resultados
