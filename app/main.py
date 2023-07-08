@@ -179,6 +179,7 @@ class App():
     def present_results(self):
         # apresentar os resultados na tela de resultados
         self.tela_resultados.setupUi(self.MainWindow)
+        self.tela_resultados.pushButton_voltar.clicked.connect(self.init_load_video_window)
     
     def cancel_processing(self):
         # finalizar processamento da yolov8n

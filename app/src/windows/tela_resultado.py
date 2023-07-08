@@ -18,7 +18,7 @@ class TelaResultado(object):
         MainWindow.setStyleSheet("background-color: rgb(33, 46, 46);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setEnabled(True)
-        self.centralwidget.setMinimumSize(QtCore.QSize(700, 0))
+        self.centralwidget.setMinimumSize(QtCore.QSize(1000, 800))
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -274,6 +274,50 @@ class TelaResultado(object):
         self.verticalLayout_2.addWidget(self.scrollArea)
         self.horizontalLayout.addWidget(self.frame)
         self.verticalLayout_5.addWidget(self.frame_7)
+
+        self.frame_8 = QtWidgets.QFrame(self.centralwidget)
+        self.frame_8.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_8.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_8.setObjectName("frame_8")
+        self.frame_8.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.frame_8)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+
+        self.pushButton_voltar = QtWidgets.QPushButton(self.frame_8)
+        self.pushButton_voltar.setText("Voltar")
+        self.pushButton_voltar.setSizePolicy(sizePolicy)
+        self.pushButton_voltar.setMinimumSize(QtCore.QSize(200, 50))
+        self.pushButton_voltar.setMaximumSize(QtCore.QSize(200, 50))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        font.setKerning(False)
+        self.pushButton_voltar.setFont(font)
+        self.pushButton_voltar.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.pushButton_voltar.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.pushButton_voltar.setAutoFillBackground(False)
+        self.pushButton_voltar.setStyleSheet("QPushButton{\n"
+"    background: rgb(68, 88, 88);\n"
+"    border-radius: 3px;\n"
+"    color: rgb(255, 255, 255);\n"
+"\n"
+"    padding: 10px;\n"
+"\n"
+"}\n"
+"\n"
+"QPushButton:hover{\n"
+"    background: rgb(47, 61, 61);\n"
+"}\n"
+"\n"
+"\n"
+"\n"
+"")
+        self.pushButton_voltar.setAutoDefault(False)
+        self.pushButton_voltar.setDefault(False)
+        self.pushButton_voltar.setFlat(False)
+        self.verticalLayout_6.addWidget(self.pushButton_voltar)
+        self.verticalLayout_5.addWidget(self.frame_8)
+        self.verticalLayout_6.setAlignment(QtCore.Qt.AlignCenter)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -292,7 +336,7 @@ class TelaResultado(object):
         self.label_rsp_velocidade.setText(_translate("MainWindow", " 2.5 pixels/frame"))
         self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-import create_rc
+#import create_rc
 
 
 if __name__ == "__main__":
