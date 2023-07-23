@@ -9,7 +9,6 @@ from src.windows.select_image_area import WindowSelectArea
 from PyQt5.QtWidgets import QFileDialog, QApplication
 from PyQt5.QtGui import QPixmap, QImage
 from src.detect_and_track import *
-import threading
 import os
 import cv2
 
@@ -30,9 +29,12 @@ class DetectAndTrackThread(QThread):
         # Esta função será executada em uma nova thread
 
         # executar a funcao detect_and_track
-        detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates)
+        self.results = detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates)
 
         self.finished.emit()  # Emite o sinal quando a segunda thread terminar
+    
+    def get_results(self):
+        return self.results
 
 
 class App():
@@ -101,7 +103,7 @@ class App():
         height = None 
         fps = None
 
-        if self.video_file_path is None:
+        if self.video_file_path == '' or self.video_file_path is None:
             self.tela_carregar_video.label_erro_video_nao_selecionado.setVisible(True)
         else:
             # video foi carregado
@@ -180,6 +182,23 @@ class App():
         # apresentar os resultados na tela de resultados
         self.tela_resultados.setupUi(self.MainWindow)
         self.tela_resultados.pushButton_voltar.clicked.connect(self.init_load_video_window)
+
+        results = self.detect_and_track_thread.get_results()
+        
+
+        # verificar se a função detect_and_track está ativado
+        # afunção de analise frame a frame só aparece na tela do usuário se ele tiver inserido ela na tela anterior
+        if self.tela_resultados.checkBox.isChecked():
+            print('Está ativado')
+        else:
+            # adicionar a quantidade total de pessoas detectadas
+            _translate = QtCore.QCoreApplication.translate
+            self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(results['full_video']['id']))} Pessoas detectadas"))
+
+
+        
+
+
     
     def cancel_processing(self):
         # finalizar processamento da yolov8n

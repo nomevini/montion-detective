@@ -140,34 +140,34 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
                         'velocity': 0
                     }
 
-        # Desenhar no frame o quadro com as detecções
-        labels = [
-            f"{tracker_id}"
-            for tracker_id
-            in detections.tracker_id
-        ]
+            # Desenhar no frame o quadro com as detecções
+            labels = [
+                f"{tracker_id}"
+                for tracker_id
+                in detections.tracker_id
+            ]
 
-        # Desenhar no frame o quadro com as detecções
-        frame = box_annotator.annotate(
-            scene=frame, 
-            detections=detections,
-            labels=labels
-        )
+            # Desenhar no frame o quadro com as detecções
+            frame = box_annotator.annotate(
+                scene=frame, 
+                detections=detections,
+                labels=labels
+            )
 
-        # reorganizar as informacoes de velocity
-        for id, velocity_person in people_velocity.items():
-            final_people_velocity[id] = velocity_person["velocity"]
+            # reorganizar as informacoes de velocity
+            for id, velocity_person in people_velocity.items():
+                final_people_velocity[id] = velocity_person["velocity"]
 
 
-        # salvar as informacoes das deteccoes frame a frame
+            # salvar as informacoes das deteccoes frame a frame
 
-        if frame_a_frame:
-            info_detections[frame_number] = {
-                'id': detections.tracker_id,
-                'frames_counter': frames_detect_counter,
-                'detection_time': video_detection_time(frames_detect_counter, fps),
-                'velocity': final_people_velocity
-            }
+            if frame_a_frame:
+                info_detections[frame_number] = {
+                    'id': detections.tracker_id,
+                    'frames_counter': frames_detect_counter,
+                    'detection_time': video_detection_time(frames_detect_counter, fps),
+                    'velocity': final_people_velocity
+                }
 
         # Escreve o quadro processado no arquivo de vídeo de saída
         output_video.write(frame)
@@ -176,7 +176,9 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
         percent = int((frame_number / total_frames) * 100)
 
         # capturar a quantidade de pessoas detectadas até o momento
-        total_people_detected = list(frames_detect_counter.keys())[-1]
+        total_people_detected = 0
+        if frames_detect_counter:
+            total_people_detected = list(frames_detect_counter.keys())[-1]
         
         # Atualiza a janela com o quadro processado
         window.update_progress(frame, percent, total_people_detected)
