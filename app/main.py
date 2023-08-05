@@ -185,8 +185,6 @@ class App():
         self.tela_resultados.pushButton_voltar.clicked.connect(self.init_load_video_window)
 
         results = self.detect_and_track_thread.get_results()
-        
-
         # verificar se a função detect_and_track está ativado
         # afunção de analise frame a frame só aparece na tela do usuário se ele tiver inserido ela na tela anterior
         if self.tela_resultados.checkBox.isChecked():
@@ -196,20 +194,24 @@ class App():
             _translate = QtCore.QCoreApplication.translate
             self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(results['full_video']['id']))} Pessoas detectadas"))
 
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
-            self.create_component(self.tela_resultados)
+            # Numero da pessoa
+            # velocidade
+            # Tempo em video
+            # people_number, velocity, time_in_video
+
+            # criando um componenta para detecção  
+            for id in list(results['full_video']['id']):
+                velocity = results['full_video']['velocity'][id]
+                time_in_video = results['full_video']['detection_time'][id]
+
+                self.create_component(self.tela_resultados, id, velocity, time_in_video)
 
             # criando vertical spacer
             spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
             self.tela_resultados.verticalLayout_3.addItem(spacerItem)
+
+
+            # carregar vídeo na tela
 
 
             
@@ -377,7 +379,7 @@ class App():
         return pixmap
     
 
-    def create_component(self, window):
+    def create_component(self, window, people_number, velocity, time_in_video):
 
         # criar o vertical layout
         self.verticalLayout = QtWidgets.QVBoxLayout()
@@ -435,10 +437,10 @@ class App():
 
         # Definir valores dos textos
         _translate = QtCore.QCoreApplication.translate
-        self.label_titulo_pessoa.setText(_translate("MainWindow", "Pessoa 01"))
-        self.label_rsp_tempo.setText(_translate("MainWindow", "00:00:07.429"))
+        self.label_titulo_pessoa.setText(_translate("MainWindow", f"Pessoa {people_number}"))
+        self.label_rsp_tempo.setText(_translate("MainWindow", f"{time_in_video}"))
         self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
-        self.label_rsp_velocidade.setText(_translate("MainWindow", " 2.5 pixels/frame"))
+        self.label_rsp_velocidade.setText(_translate("MainWindow", f"{velocity:.2f} pixels/frame"))
         self.label_tempo.setText(_translate("MainWindow", "Tempo no vídeo:"))
 
 
