@@ -32,6 +32,7 @@ class TelaProcessamento(object):
         self.centralwidget.setMinimumSize(QtCore.QSize(700, 0))
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setMinimumSize(QtCore.QSize(1000, 800))
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -83,23 +84,6 @@ class TelaProcessamento(object):
 
         self.horizontalLayout.addWidget(self.image_label)
         self.verticalLayout.addWidget(self.frame_video)
-        self.label_pessoas_detectadas = QtWidgets.QLabel(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_pessoas_detectadas.sizePolicy().hasHeightForWidth())
-        self.label_pessoas_detectadas.setSizePolicy(sizePolicy)
-        self.label_pessoas_detectadas.setMinimumSize(QtCore.QSize(0, 50))
-        self.label_pessoas_detectadas.setMaximumSize(QtCore.QSize(16777215, 50))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        font.setBold(False)
-        font.setWeight(50)
-        self.label_pessoas_detectadas.setFont(font)
-        self.label_pessoas_detectadas.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_pessoas_detectadas.setObjectName("label_pessoas_detectadas")
-        self.label_pessoas_detectadas.setStyleSheet("color: rgb(239, 239, 239);")
-        self.verticalLayout.addWidget(self.label_pessoas_detectadas)
         self.frame = QtWidgets.QFrame(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
@@ -214,12 +198,6 @@ class TelaProcessamento(object):
         height, width, _ = frame_rgb.shape
         bytes_per_line = 3 * width
 
-        print(people_count)
-
-        # atualizar o número de pessoas detectadas
-        _translate = QtCore.QCoreApplication.translate
-        self.label_pessoas_detectadas.setText(_translate("MainWindow", f"{people_count} PESSOAS DETECTADAS"))
-
         # atualizar o percentual de progresso
         self.progressBar.setValue(percent)
 
@@ -232,7 +210,6 @@ class TelaProcessamento(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.text_video_processando.setText(_translate("MainWindow", "Seu vídeo está sendo processado"))
-        self.label_pessoas_detectadas.setText(_translate("MainWindow", "0 PESSOAS DETECTADAS"))
         self.pushButton_cancelar.setText(_translate("MainWindow", "Cancelar"))
 
 

@@ -18,7 +18,7 @@ class TelaResultado(object):
         MainWindow.setStyleSheet("background-color: rgb(33, 46, 46);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setEnabled(True)
-        self.centralwidget.setMinimumSize(QtCore.QSize(700, 0))
+        self.centralwidget.setMinimumSize(QtCore.QSize(1050, 800))
         self.centralwidget.setStyleSheet("")
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -74,39 +74,47 @@ class TelaResultado(object):
         self.frame_3.setObjectName("frame_3")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.frame_3)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.checkBox_2 = QtWidgets.QCheckBox(self.frame_3)
-        self.checkBox_2.setMaximumSize(QtCore.QSize(40, 40))
-        self.checkBox_2.setStyleSheet("QCheckBox{\n"
-"    color: rgb(255, 255, 255);\n"
-"    padding: 0px;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator{\n"
-"    width: 20px;\n"
-"    height: 20px;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:unchecked{\n"
-"    image: url(:/play/play.png);\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:unchecked:hover{\n"
-"    image: url(:/play/play_hover.png);\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked{\n"
-"    image: url(:/play/pause.png);\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked:hover{\n"
-"    image: url(:/play/pause_hover.png);\n"
-"}\n"
-"")
-        self.checkBox_2.setText("")
-        self.checkBox_2.setIconSize(QtCore.QSize(16, 16))
-        self.checkBox_2.setObjectName("checkBox_2")
-        self.horizontalLayout_2.addWidget(self.checkBox_2)
+
+        # Transformando o checkBox_2 em um QPushButton e aplicando os estilos
+        self.pushButton_play_pause = QtWidgets.QPushButton(self.frame_3)
+        self.pushButton_play_pause.setMaximumSize(QtCore.QSize(40, 40))
+        self.pushButton_play_pause.setStyleSheet("QPushButton{\n"
+        "    color: rgb(255, 255, 255);\n"
+        "    padding: 0px;\n"
+        "    border: none;\n"
+        "    background-color: transparent;\n"
+        "}\n"
+        "\n"
+        "QPushButton::pressed{\n"
+        "    background-color: rgba(0, 0, 0, 0.1);\n"
+        "}\n"
+        "\n"
+        "QPushButton::hover{\n"
+        "    background-color: rgba(0, 0, 0, 0.05);\n"
+        "}\n"
+        "\n"
+        )
+        '''
+        "QPushButton::checked:hover{\n"
+        "    image: url(:/play/pause_hover.png);\n"
+        "}\n"
+        "\n"
+        "QPushButton{\n"
+        "    image: url(:/play/play.png);\n"
+        "}\n"
+        "\n"
+        "QPushButton::unchecked:hover{\n"
+        "    image: url(:/play/play_hover.png);\n"
+        "}\n"
+        ""
+        '''
+        self.pushButton_play_pause.setCheckable(True)
+        self.pushButton_play_pause.setIconSize(QtCore.QSize(16, 16))
+        self.pushButton_play_pause.setObjectName("pushButton_play_pause")
+
+
+
+        self.horizontalLayout_2.addWidget(self.pushButton_play_pause)
         self.horizontalSlider = QtWidgets.QSlider(self.frame_3)
         self.horizontalSlider.setMaximumSize(QtCore.QSize(640, 40))
         self.horizontalSlider.setSizeIncrement(QtCore.QSize(0, 0))
@@ -295,7 +303,7 @@ class TelaResultado(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label_3.setText(_translate("MainWindow", "19 pessoas detectadas"))
-        self.checkBox_2.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffffff;\">Iniciar/Pausar</span></p></body></html>"))
+        self.pushButton_play_pause.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffffff;\">Iniciar/Pausar</span></p></body></html>"))
         self.checkBox.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffffff;\">Ativar analise frame a frame</span></p></body></html>"))
         self.checkBox.setText(_translate("MainWindow", "Analise frame a frame"))
 from PyQt5.QtMultimediaWidgets import QVideoWidget

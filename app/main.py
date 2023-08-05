@@ -7,8 +7,8 @@ from src.windows.tela_carregar_video import Ui_TelaCarregarVideo
 from src.windows.tela_processamento import TelaProcessamento
 from src.windows.tela_resultado import TelaResultado
 from src.windows.select_image_area import WindowSelectArea
-from PyQt5.QtWidgets import QFileDialog, QPushButton 
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QFileDialog, QStyle 
+from PyQt5.QtGui import QPixmap, QImage, QIcon
 from src.detect_and_track import *
 import os
 import cv2
@@ -184,8 +184,22 @@ class App():
         # apresentar os resultados na tela de resultados
         self.tela_resultados.setupUi(self.MainWindow)
         self.tela_resultados.pushButton_voltar.clicked.connect(self.init_load_video_window)
-
         results = self.detect_and_track_thread.get_results()
+
+        self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPlay))
+
+        # determinando a midia
+        file_name = results["output_video_directory"]
+        self.tela_resultados.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_name)))
+
+        self.tela_resultados.pushButton_play_pause.clicked.connect(self.play_pause)
+        self.tela_resultados.horizontalSlider.sliderMoved.connect(self.set_position)
+
+        # MEDIA PLAYER
+        #self.tela_resultados.media_player.stateChanged.connect(self.update_buttons)
+        self.tela_resultados.media_player.positionChanged.connect(self.update_slider)
+        self.tela_resultados.media_player.durationChanged.connect(self.update_duration)
+
         # verificar se a função detect_and_track está ativado
         # afunção de analise frame a frame só aparece na tela do usuário se ele tiver inserido ela na tela anterior
         if self.tela_resultados.checkBox.isChecked():
@@ -211,10 +225,26 @@ class App():
             spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
             self.tela_resultados.verticalLayout_3.addItem(spacerItem)
 
-            # determinando a midia
-            file_name = results["output_video_directory"]
-            self.tela_resultados.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_name)))
+    def play_pause(self):
+        if self.tela_resultados.media_player.state() == QMediaPlayer.PlayingState:
+            self.tela_resultados.media_player.pause()
+            self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPlay))
+        else:
+            self.tela_resultados.media_player.play()
+            self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPause))
+            
         
+    def set_position(self, position):
+        self.tela_resultados.media_player.setPosition(position)
+
+    def update_slider(self, position):
+        self.tela_resultados.horizontalSlider.setValue(position)
+    
+    def update_duration(self, duration):
+        self.tela_resultados.horizontalSlider.setRange(0, duration)
+        duration_in_seconds = duration / 1000
+        #self.label_duration.setText(f"Duration: {duration_in_seconds:.2f} seconds")
+    
     def cancel_processing(self):
         # finalizar processamento da yolov8n
         
@@ -437,7 +467,9 @@ class App():
         # Definir valores dos textos
         _translate = QtCore.QCoreApplication.translate
         self.label_titulo_pessoa.setText(_translate("MainWindow", f"Pessoa {people_number}"))
-        self.label_rsp_tempo.setText(_translate("MainWindow", f"{time_in_video}"))
+        
+        formatted_time = time_in_video.strftime("%H:%M:%S.%f")[:-3]
+        self.label_rsp_tempo.setText(_translate("MainWindow", f"{formatted_time}"))
         self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
         self.label_rsp_velocidade.setText(_translate("MainWindow", f"{velocity:.2f} pixels/frame"))
         self.label_tempo.setText(_translate("MainWindow", "Tempo no vídeo:"))
