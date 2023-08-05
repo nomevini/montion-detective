@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from src.windows.tela_inicial import Ui_TelaInicial
 from src.windows.tela_carregar_video import Ui_TelaCarregarVideo
 from src.windows.tela_processamento import TelaProcessamento
@@ -13,6 +13,7 @@ import os
 import cv2
 
 from src.reduce_FPS_and_resolution import FormatVideo
+
 
 class DetectAndTrackThread(QThread):
     finished = pyqtSignal()  # Sinal para notificar a thread principal
@@ -195,11 +196,24 @@ class App():
             _translate = QtCore.QCoreApplication.translate
             self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(results['full_video']['id']))} Pessoas detectadas"))
 
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
+            self.create_component(self.tela_resultados)
 
-        
+            # criando vertical spacer
+            spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+            self.tela_resultados.verticalLayout_3.addItem(spacerItem)
 
 
-    
+            
+             
     def cancel_processing(self):
         # finalizar processamento da yolov8n
         
@@ -361,6 +375,72 @@ class App():
         pixmap = QPixmap.fromImage(qimage)
 
         return pixmap
+    
+
+    def create_component(self, window):
+
+        # criar o vertical layout
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+
+        # criar o titulo da pessoa
+        self.label_titulo_pessoa = QtWidgets.QLabel(window.scrollAreaWidgetContents)
+        self.label_titulo_pessoa.setMaximumSize(QtCore.QSize(16777215, 35))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_titulo_pessoa.setFont(font)
+        self.label_titulo_pessoa.setStyleSheet("color: rgb(255, 255, 255);\n"
+    "background-color: rgb(28, 38, 38);\n"
+    "padding: 8px;\n"
+    "border-radius: 10px;")
+        self.label_titulo_pessoa.setObjectName("label_titulo_pessoa")
+        self.verticalLayout.addWidget(self.label_titulo_pessoa)
+
+        # informações
+        self.frame = QtWidgets.QFrame(window.scrollAreaWidgetContents)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
+        self.frame.setSizePolicy(sizePolicy)
+        self.frame.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.formLayout = QtWidgets.QFormLayout(self.frame)
+        self.formLayout.setContentsMargins(-1, -1, 20, -1)
+        self.formLayout.setObjectName("formLayout")
+        self.label_rsp_tempo = QtWidgets.QLabel(self.frame)
+        self.label_rsp_tempo.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_rsp_tempo.setObjectName("label_rsp_tempo")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_rsp_tempo)
+        self.label_velocidade = QtWidgets.QLabel(self.frame)
+        self.label_velocidade.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_velocidade.setObjectName("label_velocidade")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.label_velocidade)
+        self.label_rsp_velocidade = QtWidgets.QLabel(self.frame)
+        self.label_rsp_velocidade.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_rsp_velocidade.setObjectName("label_rsp_velocidade")
+        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_rsp_velocidade)
+        self.label_tempo = QtWidgets.QLabel(self.frame)
+        self.label_tempo.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.label_tempo.setStyleSheet("color: rgb(255, 255, 255);")
+        self.label_tempo.setObjectName("label_tempo")
+        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.label_tempo)
+        self.verticalLayout.addWidget(self.frame)
+
+        window.verticalLayout_3.addLayout(self.verticalLayout)
+
+        # Definir valores dos textos
+        _translate = QtCore.QCoreApplication.translate
+        self.label_titulo_pessoa.setText(_translate("MainWindow", "Pessoa 01"))
+        self.label_rsp_tempo.setText(_translate("MainWindow", "00:00:07.429"))
+        self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
+        self.label_rsp_velocidade.setText(_translate("MainWindow", " 2.5 pixels/frame"))
+        self.label_tempo.setText(_translate("MainWindow", "Tempo no vídeo:"))
+
 
 
 if __name__ == '__main__':
