@@ -15,6 +15,7 @@ import cv2
 
 from src.reduce_FPS_and_resolution import FormatVideo
 
+from PyQt5.QtCore import QThread, pyqtSignal
 
 class DetectAndTrackThread(QThread):
     finished = pyqtSignal()  # Sinal para notificar a thread principal
@@ -25,16 +26,14 @@ class DetectAndTrackThread(QThread):
         self.video_file_path = video_file_path
         self.tela_processamento = tela_processamento
         self.coordinates = coordinates
-
+        self.state = [True]
 
     def run(self):
-        # Esta função será executada em uma nova thread
-
-        # executar a funcao detect_and_track
+        # executar a função detect_and_track
         self.results = detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates)
-
         self.finished.emit()  # Emite o sinal quando a segunda thread terminar
     
+
     def get_results(self):
         return self.results
 
@@ -172,13 +171,12 @@ class App():
         self.tela_selecionar_area.close()
         self.tela_processamento.setupUi(self.MainWindow)
         
-        self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
-
-        # etapas
         # Iniciar o processo de detecção e rastreamento em uma thread
         self.detect_and_track_thread = DetectAndTrackThread('yolov8n', self.video_file_path, self.tela_processamento, self.coordinates)
         self.detect_and_track_thread.finished.connect(self.present_results)
         self.detect_and_track_thread.start()
+
+        self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
 
     def present_results(self):
         # apresentar os resultados na tela de resultados
@@ -246,10 +244,10 @@ class App():
         #self.label_duration.setText(f"Duration: {duration_in_seconds:.2f} seconds")
     
     def cancel_processing(self):
-        # finalizar processamento da yolov8n
-        
-        # voltar para de carregar video
-        self.tela_processamento.pushButton_cancelar.clicked.connect(self.init_load_video_window)
+        self.detect_and_track_thread.terminate()
+        self.detect_and_track_thread.wait()
+
+        self.init_load_video_window()
 
     def validate_dimensao_1(self):
         # validar se o valor é menor que a dimensao do video e maior que 0

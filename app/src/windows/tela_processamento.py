@@ -191,7 +191,7 @@ class TelaProcessamento(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def update_progress(self, frame, percent, people_count):
+    def update_progress(self, frame, percent):
         # Converta o frame para o formato RGB
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
