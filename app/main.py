@@ -1,12 +1,13 @@
 import sys
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QUrl
 from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
 from src.windows.tela_inicial import Ui_TelaInicial
 from src.windows.tela_carregar_video import Ui_TelaCarregarVideo
 from src.windows.tela_processamento import TelaProcessamento
 from src.windows.tela_resultado import TelaResultado
 from src.windows.select_image_area import WindowSelectArea
-from PyQt5.QtWidgets import QFileDialog, QApplication
+from PyQt5.QtWidgets import QFileDialog, QPushButton 
 from PyQt5.QtGui import QPixmap, QImage
 from src.detect_and_track import *
 import os
@@ -210,12 +211,10 @@ class App():
             spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
             self.tela_resultados.verticalLayout_3.addItem(spacerItem)
 
-
-            # carregar vídeo na tela
-
-
-            
-             
+            # determinando a midia
+            file_name = results["output_video_directory"]
+            self.tela_resultados.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_name)))
+        
     def cancel_processing(self):
         # finalizar processamento da yolov8n
         

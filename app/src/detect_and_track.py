@@ -2,6 +2,7 @@ import cv2
 from ultralytics import YOLO
 import supervision as sv
 from scipy.spatial import distance
+import os
 
 import datetime
 
@@ -61,6 +62,7 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     # Define o codec e as configurações do vídeo de saída
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_video = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
+
 
     # contar os frames que cada deteccao apareceu
     frames_detect_counter = {}
@@ -193,6 +195,8 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     # Libera os objetos do vídeo e fecha a janela
     input_video.release()
     output_video.release()
+
+    info_detections['output_video_directory'] = f'{os.getcwd()}/output.mp4'
 
     return info_detections
 
