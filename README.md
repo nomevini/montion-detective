@@ -11,11 +11,13 @@ Salvar o vídeo com as pessoas marcadas e rastreadas para análise posterior; <b
 Permitir a analise comportamental das pessoas no vídeo, como quantidade de pessoas, tempo em vídeo, velocidade de movimento; <br>
 
 ## Tecnologias Utilizadas
+
 Python 3 <br>
-OpenCV <br>
-TensorFlow <br>
-YOLOv8 <br>
 PyQt5 <br>
+YOLOv8 <br>
+ultralytics <br>
+OpenCV <br>
+moviepy <br>
 
 ## Estrutura do Projeto
 
@@ -32,7 +34,17 @@ static/ (opcional): pasta com arquivos CSS, JS, imagens, etc., para a interface 
 ## Como Utilizar
 Clone o repositório em sua máquina local; <br>
 Instale as dependências listadas no arquivo requirements.txt; <br>
+
+```bash
+pip install -r requirements.txt
+```
+
 Execute o arquivo main.py; <br>
+
+```bash
+python3 main.py
+```
+
 Escolha o vídeo de entrada; <br>
 Ajuste os parâmetros, se necessário; <br> 
 Assista ao vídeo com as pessoas marcadas e rastreadas. <br>
