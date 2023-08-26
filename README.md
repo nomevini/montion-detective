@@ -1,8 +1,10 @@
 # MontionDetective
-Detecção e Rastreio de Pessoas em Vídeo
-
 ## Descrição
 Este projeto consiste em uma aplicação que utiliza técnicas de detecção e rastreio de objetos para identificar e acompanhar pessoas em um vídeo. O objetivo é fornecer uma solução para monitorar locais públicos, por exemplo, para garantir a segurança em eventos, shoppings, escolas, etc.
+
+
+![Exemplo de Imagem](assets/app.gif)
+
 
 ## Funcionalidades
 Detectar e rastrear pessoas em um vídeo; <br>
@@ -19,21 +21,15 @@ ultralytics <br>
 OpenCV <br>
 moviepy <br>
 
-## Estrutura do Projeto
-
-[apenas exemplo - será modificado]
-
-main.py: ponto de entrada do programa, contém a lógica principal;
-detector.py: módulo responsável por detectar as pessoas em um quadro do vídeo;
-tracker.py: módulo responsável por rastrear as pessoas detectadas entre os quadros do vídeo;
-video.py: módulo para lidar com leitura, gravação e exibição do vídeo;
-settings.py: arquivo para ajuste de parâmetros do sistema;
-templates/ (opcional): pasta com arquivos HTML para a interface web;
-static/ (opcional): pasta com arquivos CSS, JS, imagens, etc., para a interface web.
 
 ## Como Utilizar
 Clone o repositório em sua máquina local; <br>
-Instale as dependências listadas no arquivo requirements.txt; <br>
+
+```bash
+git clone https://github.com/nomevini/montion-detective.git
+```
+
+Dentro do diretório do repositório, instale as dependências listadas no arquivo requirements.txt; <br>
 
 ```bash
 pip install -r requirements.txt
