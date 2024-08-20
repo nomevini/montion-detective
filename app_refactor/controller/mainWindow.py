@@ -6,6 +6,9 @@ from view.tela_stream import Ui_TelaStream, VideoProcessingThread
 from view.tela_carregar_video import Ui_TelaCarregarVideo
 from ultralytics import YOLO
 
+# tentativa de conexão entre as telas
+from app.main import App
+
 class Ui_Main(QtWidgets.QWidget):
     def setupUi(self, Main):
         self.QtStack = QtWidgets.QStackedLayout()
@@ -24,8 +27,9 @@ class Ui_Main(QtWidgets.QWidget):
         self.tela_stream = Ui_TelaStream()
         self.tela_stream.setupUi(self.stack2)
 
-        self.tela_carregar_video = Ui_TelaCarregarVideo()
-        self.tela_carregar_video.setupUi(self.stack3)
+        
+        #self.tela_carregar_video = Ui_TelaCarregarVideo()
+        #self.tela_carregar_video.setupUi(self.stack3)
 
         self.model = YOLO("yolov8n.pt")
         self.video_thread = None
@@ -33,8 +37,9 @@ class Ui_Main(QtWidgets.QWidget):
         self.QtStack.addWidget(self.stack0) # tela inicial
         self.QtStack.addWidget(self.stack1) # tela video entrada
         self.QtStack.addWidget(self.stack2) # tela stream
-
         self.QtStack.addWidget(self.stack3) # tela carregar video
+        
+        self.carregar_video = App(self.stack3, self.QtStack)
 
 
 class Main(QMainWindow, Ui_Main):
@@ -47,14 +52,12 @@ class Main(QMainWindow, Ui_Main):
         self.tela_inicial.btn_video.clicked.connect(self.show_tela_carregar_video)
 
         # botoes tela carregar video
-        self.tela_carregar_video.pushButton_voltar.clicked.connect(self.show_tela_inicial)
+        #self.carregar_video.pushButton_voltar.clicked.connect(self.show_tela_inicial)
         #self.tela_carregar_video.pushButton_rastrear.clicked.connect(self.show_tela_processando)
         
         # botoes tela video entrada
         self.tela_video_entrada.back_button.clicked.connect(self.show_tela_inicial)
         self.tela_video_entrada.track_button.clicked.connect(self.show_tela_rastrear)
-
-        
 
         # botoes tela stream
         self.tela_stream.btn_voltar.clicked.connect(self.show_tela_video_entrada)
@@ -80,10 +83,11 @@ class Main(QMainWindow, Ui_Main):
             user = self.tela_video_entrada.user_input.text()
             user_pass = self.tela_video_entrada.pass_input.text() 
             camera_channel = self.tela_video_entrada.channel_input.text() 
+            ip = self.tela_video_entrada.ip_input.text()
 
             # iniciar thread de realtime
             self.video_thread = VideoProcessingThread(model=self.model, target_fps=5, new_width=640, main_window=self.tela_stream)
-            self.video_thread.video_path = f"rtsp://{user}:{user_pass}@192.168.0.102:554/cam/realmonitor?channel={camera_channel}&subtype=0"
+            self.video_thread.video_path = f"rtsp://{user}:{user_pass}@{ip}/cam/realmonitor?channel={camera_channel}&subtype=0"
             self.video_thread.running[0] = True
             self.video_thread.start_processing()
         

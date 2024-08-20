@@ -107,6 +107,19 @@ class Ui_TelaVideoEntrada(object):
         self.channel_input.setStyleSheet("color: white; background-color: rgb(50, 50, 50); border: 1px solid white; min-width: 200px; min-height: 40px; font-size: 18px")
         self.verticalLayout.addWidget(self.channel_input)
         self.channel_input.setVisible(False)
+
+        self.ip_label = QtWidgets.QLabel(self.centralwidget)
+        self.ip_label.setObjectName("channel_label")
+        self.ip_label.setStyleSheet("color: white; font-size: 16px;")
+        self.verticalLayout.addWidget(self.ip_label)
+        self.ip_label.setVisible(False)
+        
+        self.ip_input = QtWidgets.QLineEdit(self.centralwidget)
+        self.ip_input.setObjectName("channel_input")
+        self.ip_input.setStyleSheet("color: white; background-color: rgb(50, 50, 50); border: 1px solid white; min-width: 200px; min-height: 40px; font-size: 18px")
+        self.verticalLayout.addWidget(self.ip_input)
+        self.ip_input.setVisible(False)
+
         
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
@@ -164,6 +177,7 @@ class Ui_TelaVideoEntrada(object):
         self.user_label.setText(_translate("MainWindow", "Usuário:"))
         self.pass_label.setText(_translate("MainWindow", "Senha:"))
         self.channel_label.setText(_translate("MainWindow", "Canal da câmera:"))
+        self.ip_label.setText(_translate("MainWindow", "IP da câmera:"))
         self.track_button.setText(_translate("MainWindow", "Rastrear"))
         self.back_button.setText(_translate("MainWindow", "Voltar"))
         self.radioButton_webcam.setText(_translate("MainWindow", "Webcam"))
@@ -178,6 +192,8 @@ class Ui_TelaVideoEntrada(object):
             self.pass_input.setVisible(True)
             self.channel_label.setVisible(True)
             self.channel_input.setVisible(True)
+            self.ip_label.setVisible(True)
+            self.ip_input.setVisible(True)
         else:  # Webcam selected
             self.user_label.setVisible(False)
             self.user_input.setVisible(False)
@@ -185,6 +201,8 @@ class Ui_TelaVideoEntrada(object):
             self.pass_input.setVisible(False)
             self.channel_label.setVisible(False)
             self.channel_input.setVisible(False)
+            self.ip_label.setVisible(False)
+            self.ip_input.setVisible(False)
 
 
 if __name__ == "__main__":
