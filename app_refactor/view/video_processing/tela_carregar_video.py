@@ -977,7 +977,7 @@ class Ui_TelaCarregarVideo(object):
         self.pushButton_rastrear.setText(_translate("TelaCarregarVideo", "Rastrear"))
         self.pushButton_voltar.setToolTip(_translate("TelaCarregarVideo", "<html><head/><body><p><span style=\" color:#ffffff;\">Volta a tela inicial</span></p></body></html>"))
         self.pushButton_voltar.setText(_translate("TelaCarregarVideo", "Voltar"))
-import app.create_rc
+import resources.create_rc_video_processing
 
 
 if __name__ == "__main__":

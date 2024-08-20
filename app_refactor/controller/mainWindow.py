@@ -1,13 +1,12 @@
 from PyQt5 import  QtWidgets
 from PyQt5.QtWidgets import QMainWindow
 from view.tela_inicial import Ui_TelaInicial
-from view.tela_video_entrada import Ui_TelaVideoEntrada
-from view.tela_stream import Ui_TelaStream, VideoProcessingThread
-from view.tela_carregar_video import Ui_TelaCarregarVideo
+from view.realtime_proccessing.tela_video_entrada import Ui_TelaVideoEntrada
+from view.realtime_proccessing.tela_stream import Ui_TelaStream, VideoProcessingThread
 from ultralytics import YOLO
 
 # tentativa de conexão entre as telas
-from app.main import App
+from src.video_processing import App
 
 class Ui_Main(QtWidgets.QWidget):
     def setupUi(self, Main):
@@ -27,9 +26,6 @@ class Ui_Main(QtWidgets.QWidget):
         self.tela_stream = Ui_TelaStream()
         self.tela_stream.setupUi(self.stack2)
 
-        
-        #self.tela_carregar_video = Ui_TelaCarregarVideo()
-        #self.tela_carregar_video.setupUi(self.stack3)
 
         self.model = YOLO("yolov8n.pt")
         self.video_thread = None

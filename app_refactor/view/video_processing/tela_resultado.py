@@ -307,7 +307,7 @@ class TelaResultado(object):
         self.checkBox.setToolTip(_translate("MainWindow", "<html><head/><body><p><span style=\" color:#ffffff;\">Ativar analise frame a frame</span></p></body></html>"))
         self.checkBox.setText(_translate("MainWindow", "Analise frame a frame"))
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-import app.create_rc
+import resources.create_rc_video_processing
 
 if __name__ == "__main__":
     import sys

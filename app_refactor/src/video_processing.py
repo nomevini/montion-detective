@@ -1,22 +1,18 @@
 import sys
-from PyQt5.QtCore import Qt, QThread, pyqtSignal, QUrl
+from PyQt5.QtCore import Qt, QUrl
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
-from app.src.windows.tela_inicial import Ui_TelaInicial
-#from src.windows.tela_inicial import Ui_TelaInicial
-from app.src.windows.tela_carregar_video import Ui_TelaCarregarVideo
-from app.src.windows.tela_processamento import TelaProcessamento
-from app.src.windows.tela_resultado import TelaResultado
-from app.src.windows.select_image_area import WindowSelectArea
+from view.video_processing.tela_carregar_video import Ui_TelaCarregarVideo
+from view.video_processing.tela_processamento import TelaProcessamento
+from view.video_processing.tela_resultado import TelaResultado
+from view.video_processing.select_image_area import WindowSelectArea
 from PyQt5.QtWidgets import QFileDialog, QStyle 
 from PyQt5.QtGui import QPixmap, QImage
-from app.src.detect_and_track import *
+from src.detect_and_track import *
 import os
 import cv2
 
-from app.src.reduce_FPS_and_resolution import FormatVideo
-
-from PyQt5.QtCore import QThread, pyqtSignal
+from src.reduce_FPS_and_resolution import FormatVideo
 
 def detect_display_server():
     # Verifica se a variável de ambiente XDG_SESSION_TYPE está definida
@@ -63,26 +59,17 @@ class App():
         self.processing_status = False
 
         # carregar todas as telas
-        self.tela_inicial = Ui_TelaInicial() # tela inicial
         self.tela_carregar_video = Ui_TelaCarregarVideo() # tela carregar video
         self.tela_processamento = TelaProcessamento() # tela processamento
         self.tela_resultados = TelaResultado() # tela resultados
 
         self.init_load_video_window()
-        #self.MainWindow.show()
 
-    # tela inicial
-    def init_main_window(self):
-       
-        self.video_file_path = None
-        self.video_info = None
-       
-        self.tela_inicial.setupUi(self.MainWindow) 
-        self.tela_inicial.pushButton.clicked.connect(self.init_load_video_window)
-
+    def show_tela_inicial(self):
+        self.QtStack.setCurrentIndex(0)
+    
     # tela carregar video
     def init_load_video_window(self):
-        #self.tela_inicial.video_player.stop()
 
         self.tela_carregar_video.setupUi(self.MainWindow)
         
@@ -100,9 +87,6 @@ class App():
         self.tela_carregar_video.lineEdit_fps.textChanged.connect(self.validate_fps)
 
         self.tela_carregar_video.pushButton_rastrear.clicked.connect(self.verify_and_init_processing)
-
-    def show_tela_inicial(self):
-        self.QtStack.setCurrentIndex(0)
 
     # verifica se é possivel iniciar o processamento e inicia a tela de selecionar area
     def verify_and_init_processing(self):
