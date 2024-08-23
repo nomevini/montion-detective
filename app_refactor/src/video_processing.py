@@ -66,6 +66,19 @@ class App():
         self.init_load_video_window()
 
     def show_tela_inicial(self):
+
+        self.video_file_path = None
+        self.tela_carregar_video.label_rsp_nome_do_arquivo.setText("")
+        self.tela_carregar_video.label_rsp_dimensao.setText("")
+        self.tela_carregar_video.label_rsp_tamanho.setText("")
+        self.tela_carregar_video.label_nome_arquivo.setText("")
+        self.tela_carregar_video.label_7.setPixmap(QtGui.QPixmap())
+
+        self.tela_carregar_video.label_7.setMinimumSize(QtCore.QSize(400, 230))
+        self.tela_carregar_video.label_7.setMaximumSize(QtCore.QSize(400, 230))
+        self.tela_carregar_video.label_7.setObjectName("label_7")
+        self.tela_carregar_video.label_7.setStyleSheet("background-color: rgb(0, 0, 0);")
+
         self.QtStack.setCurrentIndex(0)
     
     # tela carregar video
@@ -134,6 +147,7 @@ class App():
             
             # processado o video
             video_processed_path = self.format_video.reduce_resolution_and_fps(self.video_file_path, (width, height), fps)
+            self.video_file_path = video_processed_path
 
             # iniciar tela de selecionar area
             self.tela_selecionar_area = WindowSelectArea(video_processed_path, self.MainWindow)
