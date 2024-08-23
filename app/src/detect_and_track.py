@@ -3,8 +3,29 @@ from ultralytics import YOLO
 import supervision as sv
 from scipy.spatial import distance
 import os
-
 import datetime
+from PyQt5.QtCore import QThread, pyqtSignal
+
+class DetectAndTrackThread(QThread):
+    finished = pyqtSignal()  # Sinal para notificar a thread principal
+
+    def __init__(self, yolo_model, video_file_path, tela_processamento, coordinates):
+        super().__init__()
+        self.yolo = yolo_model
+        self.video_file_path = video_file_path
+        self.tela_processamento = tela_processamento
+        self.coordinates = coordinates
+        self.state = [True]
+
+    def run(self):
+        # executar a função detect_and_track
+        self.results = detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates)
+        self.finished.emit()  # Emite o sinal quando a segunda thread terminar
+    
+
+    def get_results(self):
+        return self.results
+
 
 def seconds_to_time(seconds):
     hours = seconds // 3600  # Integer number of hours
@@ -53,6 +74,16 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
     model = YOLO(model_name)
 
+    # Defina o caminho da pasta de saída
+    output_folder = os.path.join(os.getcwd(), 'resultados')  # 'resultados' é o nome da pasta que você deseja
+    output_filename = 'output.mp4'
+    output_path = os.path.join(output_folder, output_filename)
+
+    # Certifique-se de que a pasta de saída existe
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+
     # Abre o vídeo de entrada e obtem as configurações
     input_video = cv2.VideoCapture(video_path)
     fps = input_video.get(cv2.CAP_PROP_FPS)
@@ -61,7 +92,7 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
     # Define o codec e as configurações do vídeo de saída
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    output_video = cv2.VideoWriter('output.mp4', fourcc, fps, (width, height))
+    output_video = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
 
     # contar os frames que cada deteccao apareceu
@@ -196,7 +227,7 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     input_video.release()
     output_video.release()
 
-    info_detections['output_video_directory'] = f'{os.getcwd()}/output.mp4'
+    info_detections['output_video_directory'] = f'{os.getcwd()}/resultados/output.mp4'
 
     return info_detections
 
