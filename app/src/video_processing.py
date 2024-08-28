@@ -49,6 +49,9 @@ class App():
         # para guardar os layouts dinamicos da tela de resultados
         self.dynamic_layouts = []
 
+        # posição do slider na tela de resultados
+        self.slider_position = 0
+
         # formato de video
         self.format_video = FormatVideo()
 
@@ -189,11 +192,13 @@ class App():
 
         self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
 
-    def ola(self):
+    def insert_results_on_layout(self):
 
         if self.tela_resultados.checkBox.isChecked():
-            print('Está ativado')
+            print(f'Está ativado na posição {self.slider_position}')
             self.clear_dynamic_widgets()
+
+            # inserir dados do frame a frame
         else:
             self.clear_dynamic_widgets()
             print('Apagando tudo e criando dnv')
@@ -248,14 +253,14 @@ class App():
 
         self.tela_resultados.pushButton_play_pause.clicked.connect(self.play_pause)
         self.tela_resultados.horizontalSlider.sliderMoved.connect(self.set_position)
+        self.tela_resultados.horizontalSlider.sliderReleased.connect(self.update_results)
 
         # MEDIA PLAYER
         #self.tela_resultados.media_player.stateChanged.connect(self.update_buttons)
         self.tela_resultados.media_player.positionChanged.connect(self.update_slider)
         self.tela_resultados.media_player.durationChanged.connect(self.update_duration)
 
-
-        self.tela_resultados.checkBox.stateChanged.connect(self.ola)
+        self.tela_resultados.checkBox.stateChanged.connect(self.insert_results_on_layout)
 
         # Limpar o layout antes de adicionar novos componentes
         self.clear_dynamic_widgets()
@@ -296,9 +301,17 @@ class App():
             self.tela_resultados.media_player.play()
             self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPause))
             
-        
+    def update_results(self):
+        print(f'Posicao final do slider {self.slider_position}')
+        # atualizar as informacoes do video apenas se a funcao frame a frame estiver ativada
+        if self.tela_resultados.checkBox.isChecked():
+            self.insert_results_on_layout()
+
     def set_position(self, position):
         self.tela_resultados.media_player.setPosition(position)
+        print(f'Posicao final do slider - set_position {self.slider_position}')
+        self.slider_position = position
+      
 
     def update_slider(self, position):
         self.tela_resultados.horizontalSlider.setValue(position)
