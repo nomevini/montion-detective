@@ -43,6 +43,12 @@ class App():
         self.MainWindow = MainWindow
         self.QtStack = QtStack
 
+        # Resultados do processamento do vídeo
+        self.results = None
+
+        # para guardar os layouts dinamicos da tela de resultados
+        self.dynamic_layouts = []
+
         # formato de video
         self.format_video = FormatVideo()
 
@@ -183,6 +189,48 @@ class App():
 
         self.tela_processamento.pushButton_cancelar.clicked.connect(self.cancel_processing)
 
+    def ola(self):
+
+        if self.tela_resultados.checkBox.isChecked():
+            print('Está ativado')
+            self.clear_dynamic_widgets()
+        else:
+            self.clear_dynamic_widgets()
+            print('Apagando tudo e criando dnv')
+
+            # adicionar a quantidade total de pessoas detectadas
+            _translate = QtCore.QCoreApplication.translate
+            self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(self.results['full_video']['id']))} Pessoas detectadas"))
+
+            # Numero da pessoa
+            # velocidade
+            # Tempo em video
+            # people_number, velocity, time_in_video
+
+            # criando um componenta para detecção  
+            for id in list(self.results['full_video']['id']):
+                velocity = self.results['full_video']['velocity'][id]
+                time_in_video = self.results['full_video']['detection_time'][id]
+
+                self.create_component(self.tela_resultados, id, velocity, time_in_video)
+
+            # criando vertical spacer
+            spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+            self.tela_resultados.verticalLayout_3.addItem(spacerItem)
+
+    def clear_dynamic_widgets(self):
+        for layout in self.dynamic_layouts:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+                elif item.layout() is not None:
+                    self.clear_dynamic_widgets_from_layout(item.layout())
+
+        # Esvazia a lista depois de limpar os layouts
+        self.dynamic_layouts = []
+
     def present_results(self):
         # apresentar os resultados na tela de resultados
         self.tela_resultados.setupUi(self.MainWindow)
@@ -190,12 +238,12 @@ class App():
 
         self.tela_resultados.pushButton_open_folder.clicked.connect(self.open_result_folder)
 
-        results = self.detect_and_track_thread.get_results()
+        self.results = self.detect_and_track_thread.get_results()
 
         self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPlay))
 
         # determinando a midia
-        file_name = results["output_video_directory"]
+        file_name = self.results["output_video_directory"]
         self.tela_resultados.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_name)))
 
         self.tela_resultados.pushButton_play_pause.clicked.connect(self.play_pause)
@@ -206,30 +254,34 @@ class App():
         self.tela_resultados.media_player.positionChanged.connect(self.update_slider)
         self.tela_resultados.media_player.durationChanged.connect(self.update_duration)
 
+
+        self.tela_resultados.checkBox.stateChanged.connect(self.ola)
+
+        # Limpar o layout antes de adicionar novos componentes
+        self.clear_dynamic_widgets()
+
         # verificar se a função detect_and_track está ativado
         # afunção de analise frame a frame só aparece na tela do usuário se ele tiver inserido ela na tela anterior
-        if self.tela_resultados.checkBox.isChecked():
-            print('Está ativado')
-        else:
-            # adicionar a quantidade total de pessoas detectadas
-            _translate = QtCore.QCoreApplication.translate
-            self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(results['full_video']['id']))} Pessoas detectadas"))
+    
+        # adicionar a quantidade total de pessoas detectadas
+        _translate = QtCore.QCoreApplication.translate
+        self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(self.results['full_video']['id']))} Pessoas detectadas"))
 
-            # Numero da pessoa
-            # velocidade
-            # Tempo em video
-            # people_number, velocity, time_in_video
+        # Numero da pessoa
+        # velocidade
+        # Tempo em video
+        # people_number, velocity, time_in_video
 
-            # criando um componenta para detecção  
-            for id in list(results['full_video']['id']):
-                velocity = results['full_video']['velocity'][id]
-                time_in_video = results['full_video']['detection_time'][id]
+        # criando um componenta para detecção  
+        for id in list(self.results['full_video']['id']):
+            velocity = self.results['full_video']['velocity'][id]
+            time_in_video = self.results['full_video']['detection_time'][id]
 
-                self.create_component(self.tela_resultados, id, velocity, time_in_video)
+            self.create_component(self.tela_resultados, id, velocity, time_in_video)
 
-            # criando vertical spacer
-            spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-            self.tela_resultados.verticalLayout_3.addItem(spacerItem)
+        # criando vertical spacer
+        spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.tela_resultados.verticalLayout_3.addItem(spacerItem)
 
     def open_result_folder(self):
         # Caminho da pasta que deseja abrir
@@ -418,74 +470,73 @@ class App():
 
         return pixmap
     
-
     def create_component(self, window, people_number, velocity, time_in_video):
-
         # criar o vertical layout
-        self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
+        verticalLayout = QtWidgets.QVBoxLayout()
+        verticalLayout.setObjectName("verticalLayout")
 
         # criar o titulo da pessoa
-        self.label_titulo_pessoa = QtWidgets.QLabel(window.scrollAreaWidgetContents)
-        self.label_titulo_pessoa.setMaximumSize(QtCore.QSize(16777215, 35))
+        label_titulo_pessoa = QtWidgets.QLabel(window.scrollAreaWidgetContents)
+        label_titulo_pessoa.setMaximumSize(QtCore.QSize(16777215, 35))
         font = QtGui.QFont()
         font.setPointSize(13)
         font.setBold(True)
         font.setWeight(75)
-        self.label_titulo_pessoa.setFont(font)
-        self.label_titulo_pessoa.setStyleSheet("color: rgb(255, 255, 255);\n"
-    "background-color: rgb(28, 38, 38);\n"
-    "padding: 8px;\n"
-    "border-radius: 10px;")
-        self.label_titulo_pessoa.setObjectName("label_titulo_pessoa")
-        self.verticalLayout.addWidget(self.label_titulo_pessoa)
+        label_titulo_pessoa.setFont(font)
+        label_titulo_pessoa.setStyleSheet("color: rgb(255, 255, 255);\n"
+                                          "background-color: rgb(28, 38, 38);\n"
+                                          "padding: 8px;\n"
+                                          "border-radius: 10px;")
+        label_titulo_pessoa.setObjectName("label_titulo_pessoa")
+        verticalLayout.addWidget(label_titulo_pessoa)
 
         # informações
-        self.frame = QtWidgets.QFrame(window.scrollAreaWidgetContents)
+        frame = QtWidgets.QFrame(window.scrollAreaWidgetContents)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Maximum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
-        self.frame.setSizePolicy(sizePolicy)
-        self.frame.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.frame.setObjectName("frame")
-        self.formLayout = QtWidgets.QFormLayout(self.frame)
-        self.formLayout.setContentsMargins(-1, -1, 20, -1)
-        self.formLayout.setObjectName("formLayout")
-        self.label_rsp_tempo = QtWidgets.QLabel(self.frame)
-        self.label_rsp_tempo.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_rsp_tempo.setObjectName("label_rsp_tempo")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label_rsp_tempo)
-        self.label_velocidade = QtWidgets.QLabel(self.frame)
-        self.label_velocidade.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_velocidade.setObjectName("label_velocidade")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.label_velocidade)
-        self.label_rsp_velocidade = QtWidgets.QLabel(self.frame)
-        self.label_rsp_velocidade.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_rsp_velocidade.setObjectName("label_rsp_velocidade")
-        self.formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.label_rsp_velocidade)
-        self.label_tempo = QtWidgets.QLabel(self.frame)
-        self.label_tempo.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.label_tempo.setStyleSheet("color: rgb(255, 255, 255);")
-        self.label_tempo.setObjectName("label_tempo")
-        self.formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.label_tempo)
-        self.verticalLayout.addWidget(self.frame)
+        sizePolicy.setHeightForWidth(frame.sizePolicy().hasHeightForWidth())
+        frame.setSizePolicy(sizePolicy)
+        frame.setLayoutDirection(QtCore.Qt.RightToLeft)
+        frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        frame.setObjectName("frame")
+        formLayout = QtWidgets.QFormLayout(frame)
+        formLayout.setContentsMargins(-1, -1, 20, -1)
+        formLayout.setObjectName("formLayout")
+        label_rsp_tempo = QtWidgets.QLabel(frame)
+        label_rsp_tempo.setStyleSheet("color: rgb(255, 255, 255);")
+        label_rsp_tempo.setObjectName("label_rsp_tempo")
+        formLayout.setWidget(1, QtWidgets.QFormLayout.LabelRole, label_rsp_tempo)
+        label_velocidade = QtWidgets.QLabel(frame)
+        label_velocidade.setStyleSheet("color: rgb(255, 255, 255);")
+        label_velocidade.setObjectName("label_velocidade")
+        formLayout.setWidget(2, QtWidgets.QFormLayout.FieldRole, label_velocidade)
+        label_rsp_velocidade = QtWidgets.QLabel(frame)
+        label_rsp_velocidade.setStyleSheet("color: rgb(255, 255, 255);")
+        label_rsp_velocidade.setObjectName("label_rsp_velocidade")
+        formLayout.setWidget(2, QtWidgets.QFormLayout.LabelRole, label_rsp_velocidade)
+        label_tempo = QtWidgets.QLabel(frame)
+        label_tempo.setLayoutDirection(QtCore.Qt.LeftToRight)
+        label_tempo.setStyleSheet("color: rgb(255, 255, 255);")
+        label_tempo.setObjectName("label_tempo")
+        formLayout.setWidget(1, QtWidgets.QFormLayout.FieldRole, label_tempo)
+        verticalLayout.addWidget(frame)
 
-        window.verticalLayout_3.addLayout(self.verticalLayout)
+        # Adicionar o layout dinâmico à lista para remoção posterior
+        self.dynamic_layouts.append(verticalLayout)
+        
+        window.verticalLayout_3.addLayout(verticalLayout)
 
         # Definir valores dos textos
         _translate = QtCore.QCoreApplication.translate
-        self.label_titulo_pessoa.setText(_translate("MainWindow", f"Pessoa {people_number}"))
-        
+        label_titulo_pessoa.setText(_translate("MainWindow", f"Pessoa {people_number}"))
+
         formatted_time = time_in_video.strftime("%H:%M:%S.%f")[:-3]
-        self.label_rsp_tempo.setText(_translate("MainWindow", f"{formatted_time}"))
-        self.label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
-        self.label_rsp_velocidade.setText(_translate("MainWindow", f"{velocity:.2f} pixels/frame"))
-        self.label_tempo.setText(_translate("MainWindow", "Tempo no vídeo:"))
-
-
+        label_rsp_tempo.setText(_translate("MainWindow", f"{formatted_time}"))
+        label_velocidade.setText(_translate("MainWindow", "Velocidade: "))
+        label_rsp_velocidade.setText(_translate("MainWindow", f"{velocity:.2f} pixels/frame"))
+        label_tempo.setText(_translate("MainWindow", "Tempo no vídeo:"))
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)

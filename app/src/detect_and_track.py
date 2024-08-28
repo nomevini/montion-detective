@@ -83,7 +83,6 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-
     # Abre o vídeo de entrada e obtem as configurações
     input_video = cv2.VideoCapture(video_path)
     fps = input_video.get(cv2.CAP_PROP_FPS)
@@ -193,7 +192,6 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
 
             # salvar as informacoes das deteccoes frame a frame
-
             if frame_a_frame:
                 info_detections[frame_number] = {
                     'id': detections.tracker_id,

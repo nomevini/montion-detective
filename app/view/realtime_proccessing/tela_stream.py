@@ -128,34 +128,7 @@ class Ui_TelaStream(object):
         self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.frame1)
         self.verticalLayout_6.setContentsMargins(1, -1, -1, -1)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.btn_area_rastreio = QtWidgets.QPushButton(self.frame1)
-        self.btn_area_rastreio.setMinimumSize(QtCore.QSize(330, 50))
-        font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.btn_area_rastreio.setFont(font)
-        self.btn_area_rastreio.setStyleSheet("QPushButton{\n"
-"    background: rgb(68, 88, 88);\n"
-"    border-radius: 3px;\n"
-"    color: rgb(255, 255, 255);\n"
-"\n"
-"    padding: 10px;\n"
-"\n"
-"}\n"
-"\n"
-"QPushButton:hover{\n"
-"    background: rgb(47, 61, 61);\n"
-"}\n"
-"\n"
-"\n"
-"QToolTip{\n"
-"    padding: 2px;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.btn_area_rastreio.setObjectName("btn_area_rastreio")
-        self.verticalLayout_6.addWidget(self.btn_area_rastreio)
+
         self.btn_notificar = QtWidgets.QPushButton(self.frame1)
         self.btn_notificar.setMinimumSize(QtCore.QSize(330, 50))
         font = QtGui.QFont()
@@ -261,8 +234,7 @@ class Ui_TelaStream(object):
     def retranslateUi(self, TelaStream):
         _translate = QtCore.QCoreApplication.translate
         TelaStream.setWindowTitle(_translate("TelaStream", "MainWindow"))
-        self.btn_area_rastreio.setText(_translate("TelaStream", "Selecionar Área de Rastreio"))
-        self.btn_notificar.setText(_translate("TelaStream", "Notificar detecções"))
+        self.btn_notificar.setText(_translate("TelaStream", "Emitir alerta ao detectar"))
         self.btn_voltar.setText(_translate("TelaStream", "Voltar"))
 
 if __name__ == "__main__":
