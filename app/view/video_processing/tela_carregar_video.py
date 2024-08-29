@@ -642,42 +642,6 @@ class Ui_TelaCarregarVideo(object):
 "padding-left: 0px;")
         self.label_erro_fps.setObjectName("label_erro_fps")
         self.verticalLayout_4.addWidget(self.label_erro_fps)
-        self.checkBox_analise_frame_a_frame = QtWidgets.QCheckBox(self.frame_1)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.checkBox_analise_frame_a_frame.sizePolicy().hasHeightForWidth())
-        self.checkBox_analise_frame_a_frame.setSizePolicy(sizePolicy)
-        self.checkBox_analise_frame_a_frame.setMinimumSize(QtCore.QSize(0, 50))
-        self.checkBox_analise_frame_a_frame.setMaximumSize(QtCore.QSize(16777215, 50))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.checkBox_analise_frame_a_frame.setFont(font)
-        self.checkBox_analise_frame_a_frame.setStyleSheet("QCheckBox{\n"
-"    color: rgb(255, 255, 255);\n"
-"    padding: 0px;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator{\n"
-"    width: 50px;\n"
-"    height: 50px;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:unchecked{\n"
-"    image: url(:/checkbox/checbox_disable.png);\n"
-"}\n"
-"\n"
-"QCheckBox::indicator:checked{\n"
-"    image: url(:/checkbox/checbox_enable.png);\n"
-"}\n"
-"\n"
-"\n"
-"QToolTip{\n"
-"    padding: 2px;\n"
-"}")
-        self.checkBox_analise_frame_a_frame.setObjectName("checkBox_analise_frame_a_frame")
-        self.verticalLayout_4.addWidget(self.checkBox_analise_frame_a_frame)
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -962,8 +926,6 @@ class Ui_TelaCarregarVideo(object):
         self.checkBox_reduzir_fps.setText(_translate("TelaCarregarVideo", "Reduzir FPS"))
         self.label_fps.setText(_translate("TelaCarregarVideo", "FPS"))
         self.label_erro_fps.setText(_translate("TelaCarregarVideo", "O FPS digitado é maior que o do vídeo original"))
-        self.checkBox_analise_frame_a_frame.setToolTip(_translate("TelaCarregarVideo", "<html><head/><body><p align=\"justify\"><span style=\" color:#ffffff;\">Essa função salva todos os rastreamentos de pessoas em todos os quadros de um vídeo. </span></p><p align=\"justify\"><span style=\" color:#ffffff;\">OBS: Essa operação pode aumentar significativamente o consumo de memória.</span></p></body></html>"))
-        self.checkBox_analise_frame_a_frame.setText(_translate("TelaCarregarVideo", "Permitir analise frame a frame"))
         self.label_erro_area_rastreio.setText(_translate("TelaCarregarVideo", "O vídeo deve ser carregador antes de selecionar a área de rastreio"))
         self.label_video_info.setText(_translate("TelaCarregarVideo", "VÍDEO INFO:"))
         self.label_nome_do_arquivo.setText(_translate("TelaCarregarVideo", "Nome do arquivo: "))

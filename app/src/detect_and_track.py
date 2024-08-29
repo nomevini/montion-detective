@@ -9,17 +9,18 @@ from PyQt5.QtCore import QThread, pyqtSignal
 class DetectAndTrackThread(QThread):
     finished = pyqtSignal()  # Sinal para notificar a thread principal
 
-    def __init__(self, yolo_model, video_file_path, tela_processamento, coordinates):
+    def __init__(self, yolo_model, video_file_path, tela_processamento, coordinates, frame_a_frame=False):
         super().__init__()
         self.yolo = yolo_model
         self.video_file_path = video_file_path
         self.tela_processamento = tela_processamento
         self.coordinates = coordinates
         self.state = [True]
+        self.frame_a_frame = frame_a_frame
 
     def run(self):
         # executar a função detect_and_track
-        self.results = detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates)
+        self.results = detect_and_track(self.yolo, self.video_file_path, self.tela_processamento, self.coordinates, frame_a_frame=self.frame_a_frame)
         self.finished.emit()  # Emite o sinal quando a segunda thread terminar
     
 
@@ -93,7 +94,6 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     output_video = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
-
     # contar os frames que cada deteccao apareceu
     frames_detect_counter = {}
     people_velocity = {}
@@ -109,9 +109,13 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
     info_detections = {}
     final_people_velocity = {}
 
+
+    info_detections['total_frames'] = total_frames
+
     for result in model.track(source=video_path, stream=True, agnostic_nms=True, classes=[0]):
         frame_number += 1
         frame = result.orig_img
+      
 
         detections = sv.Detections.from_yolov8(result)
 
@@ -137,12 +141,12 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
                 detections = detections[condition]
             
-            print(f'tracker_id {detections.tracker_id}')
+ 
 
             # contar todas as deteccoes do frame
             for identifier in detections.tracker_id:
                 id_int = int(identifier)
-                print(f'Boxes id {id_int}')
+          
                 
                 if id_int in frames_detect_counter.keys(): 
                     # encontra posicao atual da pessoa
@@ -232,11 +236,3 @@ def detect_and_track(model_name, video_path, window, detection_area = None, fram
 
 if __name__ == '__main__':
     infos = detect_and_track('yolov8n', 'pedestrian_cut_640x320_7_fps.mp4', frame_a_frame=False)
-    
-    # imprime as informacoes das deteccoes
-    for frame, deteccoes in infos.items():
-        print(f'frame: {frame}')
-        print(f'deteccoes: {deteccoes}')
-        print('\n')
-        print('\n')
-        print('\n')

@@ -50,7 +50,7 @@ class App():
         self.dynamic_layouts = []
 
         # posição do slider na tela de resultados
-        self.slider_position = 0
+        self.slider_position = 1
 
         # formato de video
         self.format_video = FormatVideo()
@@ -185,8 +185,7 @@ class App():
         self.tela_selecionar_area.close()
         self.tela_processamento.setupUi(self.MainWindow)
         
-        # Iniciar o processo de detecção e rastreamento em uma thread
-        self.detect_and_track_thread = DetectAndTrackThread('yolov8n', self.video_file_path, self.tela_processamento, self.coordinates)
+        self.detect_and_track_thread = DetectAndTrackThread('yolov8n', self.video_file_path, self.tela_processamento, self.coordinates, frame_a_frame=True)
         self.detect_and_track_thread.finished.connect(self.present_results)
         self.detect_and_track_thread.start()
 
@@ -195,13 +194,32 @@ class App():
     def insert_results_on_layout(self):
 
         if self.tela_resultados.checkBox.isChecked():
-            print(f'Está ativado na posição {self.slider_position}')
             self.clear_dynamic_widgets()
 
             # inserir dados do frame a frame
+
+             # adicionar a quantidade total de pessoas detectadas
+            _translate = QtCore.QCoreApplication.translate
+            self.tela_resultados.label_3.setText(_translate("MainWindow", f"{len(list(self.results[self.slider_position]['id']))} Pessoas detectadas"))
+
+            # Numero da pessoa
+            # velocidade
+            # Tempo em video
+            # people_number, velocity, time_in_video
+
+            # criando um componenta para detecção  
+            for id in list(self.results[self.slider_position]['id']):
+                velocity = self.results[self.slider_position]['velocity'][id]
+                time_in_video = self.results[self.slider_position]['detection_time'][id]
+
+                self.create_component(self.tela_resultados, id, velocity, time_in_video)
+
+            # criando vertical spacer
+            spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+            self.tela_resultados.verticalLayout_3.addItem(spacerItem)
+
         else:
             self.clear_dynamic_widgets()
-            print('Apagando tudo e criando dnv')
 
             # adicionar a quantidade total de pessoas detectadas
             _translate = QtCore.QCoreApplication.translate
@@ -252,6 +270,7 @@ class App():
         self.tela_resultados.media_player.setMedia(QMediaContent(QUrl.fromLocalFile(file_name)))
 
         self.tela_resultados.pushButton_play_pause.clicked.connect(self.play_pause)
+
         self.tela_resultados.horizontalSlider.sliderMoved.connect(self.set_position)
         self.tela_resultados.horizontalSlider.sliderReleased.connect(self.update_results)
 
@@ -296,29 +315,33 @@ class App():
     def play_pause(self):
         if self.tela_resultados.media_player.state() == QMediaPlayer.PlayingState:
             self.tela_resultados.media_player.pause()
+  
+            position_ms = self.tela_resultados.media_player.position()
+
+            # Calcula o número do frame
+            self.slider_position = int(position_ms * self.video_info['fps'] / 1000)
+
+
+            self.insert_results_on_layout()
             self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPlay))
         else:
             self.tela_resultados.media_player.play()
             self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPause))
             
     def update_results(self):
-        print(f'Posicao final do slider {self.slider_position}')
         # atualizar as informacoes do video apenas se a funcao frame a frame estiver ativada
         if self.tela_resultados.checkBox.isChecked():
             self.insert_results_on_layout()
 
     def set_position(self, position):
         self.tela_resultados.media_player.setPosition(position)
-        print(f'Posicao final do slider - set_position {self.slider_position}')
-        self.slider_position = position
-      
-
+        self.slider_position = int(((position / 9000) * (self.results['total_frames'] - 1)) + 1)
+ 
     def update_slider(self, position):
         self.tela_resultados.horizontalSlider.setValue(position)
     
     def update_duration(self, duration):
         self.tela_resultados.horizontalSlider.setRange(0, duration)
-        duration_in_seconds = duration / 1000
         #self.label_duration.setText(f"Duration: {duration_in_seconds:.2f} seconds")
     
     def cancel_processing(self):
