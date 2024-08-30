@@ -26,7 +26,6 @@ class Ui_Main(QtWidgets.QWidget):
         self.tela_stream = Ui_TelaStream()
         self.tela_stream.setupUi(self.stack2)
 
-
         self.model = YOLO("yolov8n.pt")
         self.video_thread = None
 
@@ -43,9 +42,15 @@ class Main(QMainWindow, Ui_Main):
         super(Main, self).__init__(parent)
         self.setupUi(self)
 
+        self.btn_alert = [False]
+
         # botoes tela inicial
         self.tela_inicial.btn_realtime.clicked.connect(self.show_tela_video_entrada)
         self.tela_inicial.btn_video.clicked.connect(self.show_tela_carregar_video)
+
+
+        self.tela_stream.radioButton.toggled.connect(self.on_radio_button_toggled)
+
 
         # botoes tela carregar video
         #self.carregar_video.pushButton_voltar.clicked.connect(self.show_tela_inicial)
@@ -90,9 +95,12 @@ class Main(QMainWindow, Ui_Main):
         else:
             # webcam
             camera = 0
+        
+            if self.tela_stream.radioButton.isChecked():
+                self.btn_alert[0] = True
 
             # iniciar thread de realtime
-            self.video_thread = VideoProcessingThread(model=self.model, target_fps=5, new_width=640, main_window=self.tela_stream)
+            self.video_thread = VideoProcessingThread(model=self.model, target_fps=5, new_width=640, main_window=self.tela_stream, alert=self.btn_alert)
             self.video_thread.video_path = 0
             self.video_thread.running[0] = True
             self.video_thread.start_processing()
@@ -100,3 +108,9 @@ class Main(QMainWindow, Ui_Main):
             
         self.QtStack.setCurrentIndex(2)
 
+
+    def on_radio_button_toggled(self, checked):
+        if checked:
+            self.btn_alert[0] = True
+        else:
+            self.btn_alert[0] = False

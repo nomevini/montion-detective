@@ -4,6 +4,17 @@ from collections import defaultdict
 from ultralytics import YOLO
 from ultralytics.utils.plotting import Annotator
 import time
+import threading
+from playsound import playsound
+
+alert_duration = 5  # Duração do alerta em segundos (não usado diretamente com playsound)
+cooldown_duration = 5  # Tempo de cooldown em segundos
+sound_file = '../assets/alert-sound.mp3'  # Substitua pelo caminho do seu arquivo de som
+
+# Estado do sistema de alerta
+alert_active = False
+cooldown_active = False
+
 
 def resize_frame(frame, new_width):
     """
@@ -58,8 +69,23 @@ def draw_boxes(frame, results, track_history):
 
     return frame
 
+def play_alert_sound():
+    global alert_active, cooldown_active
 
-def process_video(video_path, model, new_width, target_fps, main_window=None, thread_running=None):
+    # Ativa o som do alerta
+    print("Alerta! Pessoa detectada.")
+    playsound(sound_file)  # Toca o arquivo de som
+    alert_active = False
+    cooldown_active = True
+
+    # Inicia o cooldown
+    print(f"Iniciando cooldown de {cooldown_duration} segundos.")
+    time.sleep(cooldown_duration)
+    cooldown_active = False
+    print("Cooldown finalizado. Alerta pode ser ativado novamente.")
+
+
+def process_video(video_path, model, new_width, target_fps, main_window=None, thread_running=None, alert=[False]):
     """
     Processa um fluxo de vídeo de uma câmera de rede com a redução de resolução e a taxa de quadros desejada.
     
@@ -70,6 +96,8 @@ def process_video(video_path, model, new_width, target_fps, main_window=None, th
         target_fps: A taxa de quadros desejada (em frames por segundo).
         main_window: Tela no pyqt5 para transmitir o frame
     """
+
+    global alert_active, cooldown_active
 
     track_history = defaultdict(lambda: [])
     model = YOLO("yolov8n.pt")
@@ -97,7 +125,14 @@ def process_video(video_path, model, new_width, target_fps, main_window=None, th
                 frame_resized_drawed = draw_boxes(frame_resized, results, track_history)
 
                 if results[0].boxes.id is not None:
+                    # pessoa detectada
                     people_counter = len(results[0].boxes.id)
+
+                    if not alert_active and not cooldown_active and alert[0]:
+                        print("Pessoa detectada.")
+                        alert_active = True
+                        threading.Thread(target=play_alert_sound).start()
+                        time.sleep(1)  # Simula tempo entre detecções
 
                 if main_window:
                     main_window.update_image(frame_resized_drawed, people_counter)

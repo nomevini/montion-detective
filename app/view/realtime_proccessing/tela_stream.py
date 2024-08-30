@@ -8,7 +8,7 @@ from model.realtime import *
 class VideoProcessingThread(QObject):
     finished = pyqtSignal()
 
-    def __init__(self, parent=None, model=None, video_path=None, new_width=None, target_fps=None, main_window=None):
+    def __init__(self, parent=None, model=None, video_path=None, new_width=None, target_fps=None, main_window=None, alert=[False]):
         super().__init__(parent)
         self.model = model
         self.video_path = video_path
@@ -16,9 +16,10 @@ class VideoProcessingThread(QObject):
         self.target_fps = target_fps
         self.main_window = main_window
         self.running = [False]
+        self.alert = alert
 
     def process_video(self):
-        process_video(self.video_path, self.model, self.new_width, self.target_fps, self.main_window, thread_running=self.running)
+        process_video(self.video_path, self.model, self.new_width, self.target_fps, self.main_window, thread_running=self.running, alert=self.alert)
         self.finished.emit()  # Emite o sinal quando a segunda thread terminar
 
     def start_processing(self):
@@ -129,34 +130,61 @@ class Ui_TelaStream(object):
         self.verticalLayout_6.setContentsMargins(1, -1, -1, -1)
         self.verticalLayout_6.setObjectName("verticalLayout_6")
 
-        self.btn_notificar = QtWidgets.QPushButton(self.frame1)
-        self.btn_notificar.setMinimumSize(QtCore.QSize(330, 50))
+        self.radioButton = QtWidgets.QRadioButton(self.scrollAreaWidgetContents)
         font = QtGui.QFont()
-        font.setBold(True)
-        font.setWeight(75)
-        self.btn_notificar.setFont(font)
-        self.btn_notificar.setStyleSheet("QPushButton{\n"
-"    background: rgb(68, 88, 88);\n"
-"    border-radius: 3px;\n"
-"    color: rgb(255, 255, 255);\n"
-"\n"
-"    padding: 10px;\n"
-"\n"
+        font.setPointSize(-1)
+        font.setBold(False)
+        font.setWeight(50)
+        self.radioButton.setFont(font)
+        self.radioButton.setStyleSheet("QRadioButton {\n"
+"    /* Estilo básico do QRadioButton */\n"
+"    spacing: 10px; /* Espaço entre o botão e o texto */\n"
+"    color: rgb(255, 255, 255); /* Cor do texto */\n"
+"    font-size: 18px; /* Tamanho da fonte */\n"
+"    padding: 5px; /* Espaçamento interno */\n"
 "}\n"
 "\n"
-"QPushButton:hover{\n"
-"    background: rgb(47, 61, 61);\n"
+"QRadioButton::indicator {\n"
+"    /* Estilo do indicador (botão circular) */\n"
+"    width: 15px; /* Largura do círculo */\n"
+"    height: 15px; /* Altura do círculo */\n"
+"    border-radius: 7px; /* Para garantir um formato circular */\n"
+"    border: 2px solid rgb(255, 255, 255); /* Cor da borda do círculo */\n"
+"    background-color: rgb(68, 88, 88); /* Cor de fundo do círculo */\n"
 "}\n"
 "\n"
-"\n"
-"QToolTip{\n"
-"    padding: 2px;\n"
+"QRadioButton::indicator:hover {\n"
+"    /* Estilo do indicador quando o mouse está sobre ele */\n"
+"    border: 2px solid rgb(85, 170, 255); /* Cor da borda ao passar o mouse */\n"
+"    background-color: rgb(50, 70, 70); /* Cor de fundo ao passar o mouse */\n"
 "}\n"
 "\n"
+"QRadioButton::indicator:checked {\n"
+"    /* Estilo do indicador quando está selecionado */\n"
+"    background-color: rgb(85, 170, 255); /* Cor de fundo quando selecionado */\n"
+"    border: 2px solid rgb(85, 170, 255); /* Cor da borda quando selecionado */\n"
+"}\n"
 "\n"
+"QRadioButton::indicator:checked:hover {\n"
+"    /* Estilo do indicador selecionado quando o mouse está sobre ele */\n"
+"    background-color: rgb(70, 150, 235); /* Cor de fundo ao passar o mouse */\n"
+"    border: 2px solid rgb(70, 150, 235); /* Cor da borda ao passar o mouse */\n"
+"}\n"
+"\n"
+"QRadioButton:disabled {\n"
+"    /* Estilo quando o QRadioButton está desabilitado */\n"
+"    color: rgb(150, 150, 150); /* Cor do texto quando desabilitado */\n"
+"}\n"
+"\n"
+"QRadioButton::indicator:disabled {\n"
+"    /* Estilo do indicador quando o QRadioButton está desabilitado */\n"
+"    background-color: rgb(80, 80, 80); /* Cor de fundo quando desabilitado */\n"
+"    border: 2px solid rgb(120, 120, 120); /* Cor da borda quando desabilitado */\n"
+"}\n"
 "")
-        self.btn_notificar.setObjectName("btn_notificar")
-        self.verticalLayout_6.addWidget(self.btn_notificar)
+        self.radioButton.setObjectName("radioButton")
+        self.verticalLayout_3.addWidget(self.radioButton)
+
         self.verticalLayout_3.addWidget(self.frame1)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem2)
@@ -234,7 +262,7 @@ class Ui_TelaStream(object):
     def retranslateUi(self, TelaStream):
         _translate = QtCore.QCoreApplication.translate
         TelaStream.setWindowTitle(_translate("TelaStream", "MainWindow"))
-        self.btn_notificar.setText(_translate("TelaStream", "Emitir alerta ao detectar"))
+        self.radioButton.setText(_translate("TelaStream", "Emitir alerta ao detectar"))
         self.btn_voltar.setText(_translate("TelaStream", "Voltar"))
 
 if __name__ == "__main__":

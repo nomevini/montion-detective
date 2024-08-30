@@ -321,7 +321,6 @@ class App():
             # Calcula o número do frame
             self.slider_position = int(position_ms * self.video_info['fps'] / 1000)
 
-
             self.insert_results_on_layout()
             self.tela_resultados.pushButton_play_pause.setIcon(self.MainWindow.style().standardIcon(QStyle.SP_MediaPlay))
         else:
